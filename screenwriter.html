@@ -1,0 +1,3531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Screenwriter</title>
+  <style>
+:root {
+  --bg: #f5f1e9;
+  --sidebar: #151515;
+  --sidebar-soft: #202020;
+  --ink: #1e1e1e;
+  --muted: #707070;
+  --line: #e6ded0;
+  --paper: #fffdf8;
+  --accent: #6b4eff;
+  --accent-dark: #5239d8;
+  --shadow: 0 18px 50px rgba(35, 27, 12, 0.14);
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+}
+
+.sidebar {
+  background: var(--sidebar);
+  color: white;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  background: white;
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.brand p {
+  margin: 3px 0 0;
+  color: #bdbdbd;
+  font-size: 12px;
+}
+
+
+.home-return-btn {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 12px;
+  padding: 11px 14px;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-weight: 800;
+  text-align: left;
+}
+
+.home-return-btn:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+.home-top-btn {
+  font-weight: 800;
+  border-color: #c9bba9;
+}
+
+.primary-btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+}
+
+.primary-btn:hover { background: var(--accent-dark); }
+
+.panel {
+  background: var(--sidebar-soft);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.panel-title {
+  color: #d8d8d8;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.title-input {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: #101010;
+  color: white;
+  border-radius: 10px;
+  padding: 10px;
+  outline: none;
+}
+
+.title-input:focus { border-color: rgba(255,255,255,0.34); }
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #b9b9b9;
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.scene-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 340px;
+  overflow: auto;
+}
+
+.scene-list.empty {
+  color: #9c9c9c;
+  font-size: 13px;
+}
+
+.scene-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(255,255,255,0.06);
+  text-align: left;
+  padding: 7px 8px;
+  border-radius: 10px;
+  background: #111;
+  color: #efefef;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.scene-item:hover { background: #303030; }
+.scene-item.dragging { opacity: .55; }
+.scene-item.drop-before { box-shadow: 0 -3px 0 var(--accent); }
+.scene-item.drop-after { box-shadow: 0 3px 0 var(--accent); }
+
+.scene-drag-handle {
+  color: #999;
+  cursor: grab;
+  user-select: none;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.scene-item:active .scene-drag-handle { cursor: grabbing; }
+
+.scene-jump {
+  border: 0;
+  background: transparent;
+  color: #efefef;
+  text-align: left;
+  padding: 3px 0;
+  font-size: 12px;
+  line-height: 1.35;
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.scene-jump:hover { color: white; }
+
+.scene-actions {
+  display: flex;
+  gap: 3px;
+}
+
+.scene-actions button {
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 7px;
+  background: #1e1e1e;
+  color: #ddd;
+  font-size: 12px;
+  padding: 0;
+}
+
+.scene-actions button:hover:not(:disabled) {
+  background: var(--accent);
+  color: white;
+}
+
+.scene-actions button:disabled {
+  opacity: .32;
+  cursor: default;
+}
+
+.compact-help p {
+  margin: 7px 0;
+  color: #bfbfbf;
+  font-size: 12px;
+}
+
+kbd {
+  background: #0f0f0f;
+  border: 1px solid #454545;
+  border-bottom-color: #222;
+  padding: 1px 5px;
+  border-radius: 5px;
+  color: white;
+  font-size: 11px;
+}
+
+.workspace {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 22px;
+  background: rgba(255,255,255,0.75);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.toolbar-spacer { flex: 1; }
+
+.tool-btn {
+  border: 1px solid #ded4c6;
+  background: white;
+  color: #242424;
+  border-radius: 10px;
+  padding: 9px 11px;
+  font-size: 13px;
+}
+
+.tool-btn:hover,
+.tool-btn.active {
+  border-color: #bcb1a1;
+  background: #f5efe6;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 190px;
+  background: white;
+  border: 1px solid #dfd6c9;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 8px;
+  display: none;
+  z-index: 50;
+}
+
+.dropdown.open .dropdown-menu { display: block; }
+.dropdown-menu.align-right { left: auto; right: 0; }
+
+.dropdown-menu button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  border-radius: 9px;
+  padding: 9px 10px;
+  color: #222;
+}
+
+.dropdown-menu button:hover { background: #f3eee7; }
+
+.editor-wrap {
+  position: relative;
+  flex: 1;
+  padding: 36px 18px 60px;
+  overflow: auto;
+}
+
+.page-shadow {
+  width: min(100%, 860px);
+  margin: 0 auto;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  border-radius: 3px;
+  min-height: calc(100vh - 150px);
+}
+
+.screenplay-page {
+  width: 100%;
+  min-height: 1120px;
+  padding: 68px 78px;
+  outline: none;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12pt;
+  line-height: 1.15;
+  color: #111;
+}
+
+.line {
+  min-height: 1.15em;
+  white-space: pre-wrap;
+  word-break: break-word;
+  outline: none;
+  border-radius: 3px;
+  padding: 1px 2px;
+  margin: 0;
+}
+
+.line + .line { margin-top: 7px; }
+.line.scene { text-transform: uppercase; margin-top: 18px; font-weight: 700; }
+.line:first-child { margin-top: 0; }
+.line.transition + .line.scene { margin-top: 7px; }
+.line.action { margin-left: 0; }
+.line.character { text-transform: uppercase; margin-left: 265px; margin-top: 14px; width: 260px; }
+.line.parenthetical { margin-left: 205px; width: 280px; }
+.line.dialogue { margin-left: 150px; width: 420px; }
+.line.transition { text-transform: uppercase; text-align: right; margin-top: 14px; }
+.line.shot { text-transform: uppercase; margin-top: 14px; }
+
+.line.active-line {
+  background: rgba(107, 78, 255, 0.06);
+  box-shadow: 0 0 0 1px rgba(107, 78, 255, 0.10) inset;
+}
+
+.line:empty::before {
+  content: attr(data-placeholder);
+  color: #b5aea5;
+  pointer-events: none;
+}
+
+.suggestions {
+  position: fixed;
+  min-width: 190px;
+  max-width: 280px;
+  max-height: 260px;
+  overflow: auto;
+  z-index: 100;
+  background: #151515;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.24);
+  border-radius: 10px;
+  padding: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.suggestions::-webkit-scrollbar { width: 7px; }
+.suggestions::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.28); border-radius: 999px; }
+
+.suggestion-title {
+  color: #a7a7a7;
+  font-size: 11px;
+  padding: 6px 9px 5px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.suggestion-item {
+  border: 0;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: white;
+  padding: 7px 9px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.suggestion-item:hover,
+.suggestion-item.active {
+  background: var(--accent);
+}
+
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(0,0,0,0.36);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.modal-backdrop[hidden] { display: none; }
+
+.modal-card {
+  width: min(100%, 560px);
+  background: #fffdf8;
+  border: 1px solid #ded4c6;
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.modal-header p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ded4c6;
+  border-radius: 10px;
+  background: white;
+  color: #222;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #eadfce;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff8ed;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.check-row input { width: 18px; height: 18px; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #333;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.form-grid label:first-child { grid-column: 1 / -1; }
+
+.form-grid em {
+  color: var(--muted);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.form-grid input {
+  border: 1px solid #ded4c6;
+  border-radius: 10px;
+  background: white;
+  color: #111;
+  padding: 10px;
+  outline: none;
+}
+
+.form-grid input:focus { border-color: #a99bdc; box-shadow: 0 0 0 3px rgba(107,78,255,.11); }
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+@media (max-width: 650px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+.toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  background: #171717;
+  color: white;
+  padding: 10px 13px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: .2s ease;
+  font-size: 13px;
+  z-index: 200;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar { position: relative; height: auto; }
+  .compact-tools { display: none; }
+  .screenplay-page { padding: 38px 24px; }
+  .line.character { margin-left: 35%; }
+  .line.parenthetical { margin-left: 25%; width: 55%; }
+  .line.dialogue { margin-left: 12%; width: 76%; }
+}
+
+@media print {
+  body { background: white; }
+  .sidebar, .topbar, .suggestions, 
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(0,0,0,0.36);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.modal-backdrop[hidden] { display: none; }
+
+.modal-card {
+  width: min(100%, 560px);
+  background: #fffdf8;
+  border: 1px solid #ded4c6;
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.modal-header p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ded4c6;
+  border-radius: 10px;
+  background: white;
+  color: #222;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #eadfce;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff8ed;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.check-row input { width: 18px; height: 18px; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #333;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.form-grid label:first-child { grid-column: 1 / -1; }
+
+.form-grid em {
+  color: var(--muted);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.form-grid input {
+  border: 1px solid #ded4c6;
+  border-radius: 10px;
+  background: white;
+  color: #111;
+  padding: 10px;
+  outline: none;
+}
+
+.form-grid input:focus { border-color: #a99bdc; box-shadow: 0 0 0 3px rgba(107,78,255,.11); }
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+@media (max-width: 650px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+.toast { display: none !important; }
+  .app-shell { display: block; }
+  .editor-wrap { padding: 0; overflow: visible; }
+  .page-shadow { box-shadow: none; width: 100%; }
+  .screenplay-page { padding: 0.75in 1in; min-height: auto; }
+}
+
+/* Home / documents screen */
+.home-screen {
+  min-height: 100vh;
+  background: #f3f6fb;
+  color: #1f2937;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.home-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 38px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.home-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.home-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: #111827;
+  color: white;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.home-brand h1 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.home-brand p {
+  margin: 3px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.home-main {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 30px 24px 54px;
+}
+
+.template-section {
+  padding-bottom: 32px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 22px;
+  max-width: 450px;
+}
+
+.template-card {
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 4px;
+  height: 230px;
+  padding: 18px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  color: #111827;
+  box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.template-card:hover {
+  border-color: #4b83f1;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, .16);
+}
+
+.template-card strong {
+  font-size: 15px;
+  align-self: stretch;
+  text-align: left;
+  margin-top: auto;
+}
+
+.template-card span {
+  align-self: stretch;
+  text-align: left;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.blank-plus {
+  margin-top: auto;
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  color: #4285f4;
+  font-size: 72px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.import-icon {
+  margin-top: auto;
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  color: #16a34a;
+  border: 2px dashed #86efac;
+  border-radius: 20px;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.recent-section {
+  margin-top: 28px;
+}
+
+.ghost-btn {
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.ghost-btn:hover {
+  background: #f9fafb;
+}
+
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.recent-grid.empty {
+  display: block;
+  color: #6b7280;
+  padding: 26px 0;
+}
+
+.recent-card {
+  position: relative;
+}
+
+.recent-open {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  color: #111827;
+}
+
+.recent-page {
+  height: 250px;
+  border: 1px solid #d1d5db;
+  background: #fffdf8;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 22px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 9px;
+  line-height: 1.25;
+  color: #111;
+  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+
+.recent-card:hover .recent-page {
+  border-color: #4b83f1;
+  box-shadow: 0 5px 18px rgba(37,99,235,.13);
+}
+
+.recent-preview {
+  white-space: pre-wrap;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 13;
+  -webkit-box-orient: vertical;
+}
+
+.recent-open strong {
+  display: block;
+  margin: 12px 36px 2px 4px;
+  font-size: 15px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.recent-open span {
+  display: block;
+  margin-left: 4px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.recent-delete {
+  position: absolute;
+  right: 8px;
+  bottom: 2px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #6b7280;
+  font-size: 22px;
+}
+
+.recent-delete:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+@media (max-width: 780px) {
+  .home-header { padding: 0 18px; }
+  .home-main { padding: 22px 16px 42px; }
+  .template-grid { max-width: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .template-card { height: 190px; }
+}
+
+[hidden] { display: none !important; }
+
+</style>
+</head>
+<body>
+
+  <section id="homeScreen" class="home-screen">
+    <header class="home-header">
+      <div class="home-brand">
+        <div class="home-logo">SW</div>
+        <div>
+          <h1>Screenwriter</h1>
+          <p>Start clean. Import old files. Continue from recents.</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="home-main">
+      <section class="template-section">
+        <div class="section-head">
+          <h2>Start a new document</h2>
+        </div>
+        <div class="template-grid">
+          <button id="homeBlankBtn" class="template-card blank-card" type="button">
+            <div class="blank-plus">+</div>
+            <strong>Blank screenplay</strong>
+          </button>
+          <button id="homeImportBtn" class="template-card import-card" type="button">
+            <div class="import-icon">↥</div>
+            <strong>Import file</strong>
+            <span>.swscript, .fountain, .txt</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="recent-section">
+        <div class="section-head">
+          <h2>Recent documents</h2>
+          <button id="clearRecentsBtn" class="ghost-btn" type="button">Clear recents</button>
+        </div>
+        <div id="recentDocs" class="recent-grid empty">No recent documents yet.</div>
+      </section>
+    </main>
+
+    <input id="importFileInput" type="file" accept=".swscript,.json,.fountain,.txt,text/plain,application/json" hidden />
+  </section>
+  <div class="app-shell" id="appShell" hidden>
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">SW</div>
+        <div>
+          <h1>Screenwriter</h1>
+          <p>Clean writing. Fast scene lines.</p>
+        </div>
+      </div>
+
+      <button class="home-return-btn" id="sidebarHomeBtn" type="button">← Home</button>
+
+      <button class="primary-btn" id="newScriptBtn" type="button">+ New Script</button>
+
+      <section class="panel">
+        <div class="panel-title">Script</div>
+        <input id="scriptTitle" class="title-input" value="Untitled Script" aria-label="Script title" />
+        <div class="meta-row">
+          <span id="pageCount">1 page</span>
+          <span id="wordCount">0 words</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">Scenes</div>
+        <div id="sceneList" class="scene-list empty">No scene headings yet.</div>
+      </section>
+
+      <section class="panel compact-help">
+        <div class="panel-title">Fast keys</div>
+        <p><kbd>Tab</kbd> accept suggestion</p>
+        <p><kbd>↑</kbd>/<kbd>↓</kbd> move suggestions</p>
+        <p><kbd>Esc</kbd> hide suggestions</p>
+        <p><kbd>Enter</kbd> next screenplay line</p>
+        <p><kbd>Ctrl</kbd> + <kbd>Enter</kbd> next element</p>
+        <p>Drag scenes in sidebar to reorder</p>
+        <p>Transition can sit before Scene 1</p>
+        <p>Scene number + slugline same line</p>
+        <p><kbd>Ctrl</kbd> + <kbd>S</kbd> save</p>
+        <p><kbd>Ctrl</kbd> + <kbd>4</kbd> transition list</p>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div class="toolbar-group">
+          <button class="tool-btn home-top-btn" id="homeBtn" type="button">← Home</button>
+        </div>
+
+        <div class="toolbar-group">
+          <button class="tool-btn" data-action="undo" type="button">Undo</button>
+          <button class="tool-btn" data-action="redo" type="button">Redo</button>
+        </div>
+
+        <div class="toolbar-group dropdown" data-dropdown>
+          <button class="tool-btn dropdown-toggle" id="elementToggle" type="button">
+            <span id="currentElementLabel">Action</span>
+            <span class="chevron">▾</span>
+          </button>
+          <div class="dropdown-menu">
+            <button data-type="scene" type="button">Scene Heading</button>
+            <button data-type="action" type="button">Action</button>
+            <button data-type="character" type="button">Character</button>
+            <button data-type="parenthetical" type="button">Parenthetical</button>
+            <button data-type="dialogue" type="button">Dialogue</button>
+            <button data-type="transition" type="button">Transition</button>
+            <button data-type="shot" type="button">Shot</button>
+          </div>
+        </div>
+
+        <div class="toolbar-group compact-tools">
+          <button class="tool-btn" data-type="scene" type="button">Scene</button>
+          <button class="tool-btn" data-type="action" type="button">Action</button>
+          <button class="tool-btn" data-type="character" type="button">Character</button>
+          <button class="tool-btn" data-type="dialogue" type="button">Dialogue</button>
+          <button class="tool-btn" data-type="transition" type="button">Transition</button>
+        </div>
+
+        <div class="toolbar-spacer"></div>
+
+        <div class="toolbar-group">
+          <button class="tool-btn" id="titlePageBtn" type="button">Title Page</button>
+        </div>
+
+        <div class="toolbar-group dropdown" data-dropdown>
+          <button class="tool-btn dropdown-toggle" type="button">Export <span class="chevron">▾</span></button>
+          <div class="dropdown-menu align-right">
+            <button data-export="txt" type="button">Plain Text</button>
+            <button data-export="fountain" type="button">Fountain</button>
+            <button data-export="project" type="button">Screenwriter File (.swscript)</button>
+            <button data-export="pdf" type="button">Save PDF</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="editor-wrap">
+        <div class="page-shadow">
+          <div id="editor" class="screenplay-page" spellcheck="true" aria-label="Screenplay editor"></div>
+        </div>
+        <div id="suggestions" class="suggestions" hidden></div>
+      </div>
+    </main>
+  </div>
+
+
+  <div id="titlePageModal" class="modal-backdrop" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="titlePageHeading">
+      <div class="modal-header">
+        <div>
+          <h2 id="titlePageHeading">Title Page</h2>
+          <p>Used only for export / print. Editor stays clean.</p>
+        </div>
+        <button id="titlePageClose" class="icon-btn" type="button" aria-label="Close title page settings">×</button>
+      </div>
+
+      <label class="check-row">
+        <input id="titlePageEnabled" type="checkbox" />
+        <span>Include title page when exporting</span>
+      </label>
+
+      <div class="form-grid">
+        <label>
+          <span>Title</span>
+          <input id="titlePageTitle" type="text" placeholder="Script title" />
+        </label>
+        <label>
+          <span>Written by</span>
+          <input id="titlePageWriter" type="text" placeholder="Writer name" />
+        </label>
+        <label>
+          <span>Email <em>optional</em></span>
+          <input id="titlePageEmail" type="email" placeholder="writer@email.com" />
+        </label>
+        <label>
+          <span>Phone <em>optional</em></span>
+          <input id="titlePagePhone" type="text" placeholder="Phone number" />
+        </label>
+        <label>
+          <span>Draft date <em>optional</em></span>
+          <input id="titlePageDate" type="text" placeholder="June 2026" />
+        </label>
+        <label>
+          <span>Copyright <em>optional</em></span>
+          <input id="titlePageCopyright" type="text" placeholder="© Your Name" />
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button id="titlePageClear" class="tool-btn" type="button">Clear</button>
+        <button id="titlePageSave" class="primary-btn" type="button">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+(function () {
+  var undoStack = [];
+  var redoStack = [];
+  var locked = false;
+  var MAX = 90;
+
+  function cloneState(state) {
+    return JSON.parse(JSON.stringify(state));
+  }
+
+  window.ScreenwriterHistory = {
+    reset: function (state) {
+      undoStack = [cloneState(state)];
+      redoStack = [];
+    },
+    push: function (state) {
+      if (locked || !state) return;
+      var next = JSON.stringify(state);
+      var last = undoStack.length ? JSON.stringify(undoStack[undoStack.length - 1]) : '';
+      if (next === last) return;
+      undoStack.push(cloneState(state));
+      if (undoStack.length > MAX) undoStack.shift();
+      redoStack = [];
+    },
+    undo: function (currentState) {
+      if (undoStack.length <= 1) return null;
+      locked = true;
+      redoStack.push(cloneState(currentState));
+      undoStack.pop();
+      var state = cloneState(undoStack[undoStack.length - 1]);
+      locked = false;
+      return state;
+    },
+    redo: function (currentState) {
+      if (!redoStack.length) return null;
+      locked = true;
+      undoStack.push(cloneState(currentState));
+      var state = cloneState(redoStack.pop());
+      locked = false;
+      return state;
+    }
+  };
+})();
+
+</script>
+  <script>
+(function () {
+  var LABELS = {
+    scene: 'Scene Heading',
+    action: 'Action',
+    character: 'Character',
+    parenthetical: 'Parenthetical',
+    dialogue: 'Dialogue',
+    transition: 'Transition',
+    shot: 'Shot'
+  };
+
+  window.ScreenwriterToolbar = {
+    init: function () {
+      document.querySelectorAll('[data-type]').forEach(function (button) {
+        button.addEventListener('click', function (event) {
+          event.preventDefault();
+          var type = button.getAttribute('data-type');
+          if (window.ScreenwriterEditor) window.ScreenwriterEditor.setCurrentLineType(type);
+          if (window.ScreenwriterDropdown) window.ScreenwriterDropdown.closeAll();
+        });
+      });
+
+      document.querySelectorAll('[data-action]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          var action = button.getAttribute('data-action');
+          if (!window.ScreenwriterEditor) return;
+          if (action === 'undo') window.ScreenwriterEditor.undo();
+          if (action === 'redo') window.ScreenwriterEditor.redo();
+        });
+      });
+    },
+    updateToolbar: function (type) {
+      var label = document.querySelector('#currentElementLabel');
+      if (label) label.textContent = LABELS[type] || 'Action';
+      document.querySelectorAll('.tool-btn[data-type]').forEach(function (button) {
+        button.classList.toggle('active', button.getAttribute('data-type') === type);
+      });
+    }
+  };
+})();
+
+</script>
+  <script>
+(function () {
+  function closeAll(except) {
+    document.querySelectorAll('[data-dropdown].open').forEach(function (item) {
+      if (item !== except) item.classList.remove('open');
+    });
+  }
+
+  window.ScreenwriterDropdown = {
+    init: function () {
+      document.querySelectorAll('[data-dropdown]').forEach(function (dropdown) {
+        var toggle = dropdown.querySelector('.dropdown-toggle');
+        if (!toggle) return;
+        toggle.addEventListener('click', function (event) {
+          event.stopPropagation();
+          var willOpen = !dropdown.classList.contains('open');
+          closeAll(dropdown);
+          dropdown.classList.toggle('open', willOpen);
+        });
+      });
+
+      document.addEventListener('click', function () { closeAll(); });
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeAll();
+      });
+    },
+    closeAll: closeAll
+  };
+})();
+
+</script>
+  <script>
+(function () {
+  var els = {};
+
+  function get(selector) { return document.querySelector(selector); }
+
+  function syncTitleFromSidebar() {
+    var titleInput = get('#scriptTitle');
+    if (titleInput && els.title && !els.title.value.trim()) {
+      els.title.value = titleInput.value || 'Untitled Script';
+    }
+  }
+
+  function data() {
+    return {
+      enabled: !!(els.enabled && els.enabled.checked),
+      title: (els.title && els.title.value.trim()) || (get('#scriptTitle') && get('#scriptTitle').value.trim()) || 'Untitled Script',
+      writer: (els.writer && els.writer.value.trim()) || '',
+      email: (els.email && els.email.value.trim()) || '',
+      phone: (els.phone && els.phone.value.trim()) || '',
+      date: (els.date && els.date.value.trim()) || '',
+      copyright: (els.copyright && els.copyright.value.trim()) || ''
+    };
+  }
+
+  function setData(value) {
+    value = value || {};
+    if (!els.enabled) return;
+    els.enabled.checked = !!value.enabled;
+    els.title.value = value.title || (get('#scriptTitle') && get('#scriptTitle').value) || 'Untitled Script';
+    els.writer.value = value.writer || '';
+    els.email.value = value.email || '';
+    els.phone.value = value.phone || '';
+    els.date.value = value.date || '';
+    els.copyright.value = value.copyright || '';
+  }
+
+  function open() {
+    if (!els.modal) return;
+    syncTitleFromSidebar();
+    els.modal.hidden = false;
+    setTimeout(function () { (els.title || els.enabled).focus(); }, 0);
+  }
+
+  function close() {
+    if (els.modal) els.modal.hidden = true;
+  }
+
+  function changed() {
+    if (window.ScreenwriterEditor) window.ScreenwriterEditor.autosave();
+  }
+
+  function clear() {
+    setData({ enabled: false });
+    changed();
+  }
+
+  function init() {
+    els = {
+      openBtn: get('#titlePageBtn'),
+      modal: get('#titlePageModal'),
+      closeBtn: get('#titlePageClose'),
+      saveBtn: get('#titlePageSave'),
+      clearBtn: get('#titlePageClear'),
+      enabled: get('#titlePageEnabled'),
+      title: get('#titlePageTitle'),
+      writer: get('#titlePageWriter'),
+      email: get('#titlePageEmail'),
+      phone: get('#titlePagePhone'),
+      date: get('#titlePageDate'),
+      copyright: get('#titlePageCopyright')
+    };
+
+    if (!els.modal) return;
+
+    setData({ enabled: false });
+
+    if (els.openBtn) els.openBtn.addEventListener('click', open);
+    if (els.closeBtn) els.closeBtn.addEventListener('click', close);
+    if (els.saveBtn) els.saveBtn.addEventListener('click', function () { changed(); close(); });
+    if (els.clearBtn) els.clearBtn.addEventListener('click', clear);
+
+    els.modal.addEventListener('click', function (event) {
+      if (event.target === els.modal) close();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && els.modal && !els.modal.hidden) close();
+    });
+
+    ['change', 'input'].forEach(function (name) {
+      [els.enabled, els.title, els.writer, els.email, els.phone, els.date, els.copyright].forEach(function (field) {
+        if (field) field.addEventListener(name, changed);
+      });
+    });
+
+    var scriptTitle = get('#scriptTitle');
+    if (scriptTitle) {
+      scriptTitle.addEventListener('input', function () {
+        if (els.title && !els.title.matches(':focus')) els.title.value = scriptTitle.value;
+      });
+    }
+  }
+
+  window.ScreenwriterTitlePage = {
+    init: init,
+    open: open,
+    close: close,
+    getData: data,
+    setData: setData,
+    clear: clear
+  };
+})();
+
+</script>
+  <script>
+(function () {
+  function safe(value) {
+    return (value || '').toString().trim();
+  }
+
+  function escapeHtml(value) {
+    return safe(value).replace(/[&<>"]/g, function (char) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[char];
+    });
+  }
+
+  function getTitlePage(data) {
+    var page = data.titlePage || {};
+    return {
+      enabled: !!page.enabled,
+      title: safe(page.title) || safe(data.title) || 'Untitled Script',
+      writer: safe(page.writer),
+      email: safe(page.email),
+      phone: safe(page.phone),
+      date: safe(page.date),
+      copyright: safe(page.copyright)
+    };
+  }
+
+  function titlePagePlain(data) {
+    var page = getTitlePage(data);
+    if (!page.enabled) return '';
+    var lines = [];
+    lines.push(page.title.toUpperCase());
+    lines.push('');
+    if (page.writer) {
+      lines.push('Written by');
+      lines.push(page.writer);
+      lines.push('');
+    }
+    var contact = [];
+    if (page.email) contact.push(page.email);
+    if (page.phone) contact.push(page.phone);
+    if (contact.length) {
+      lines.push('Contact: ' + contact.join(' / '));
+      lines.push('');
+    }
+    if (page.date) lines.push(page.date);
+    if (page.copyright) lines.push(page.copyright);
+    return lines.join('\n').replace(/\n+$/,'') + '\n\n\n';
+  }
+
+  function getPlainText(data) {
+    var title = (data.title || 'Untitled Script').toUpperCase();
+    var body = data.lines.map(function (line) { return line.text || ''; }).join('\n\n');
+    if (data.titlePage && data.titlePage.enabled) return titlePagePlain(data) + body + '\n';
+    return title + '\n\n' + body + '\n';
+  }
+
+  function getFountain(data) {
+    var title = data.title || 'Untitled Script';
+    var page = getTitlePage(data);
+    var lines = [];
+    lines.push('Title: ' + (page.enabled ? page.title : title));
+    if (page.enabled && page.writer) lines.push('Author: ' + page.writer);
+    if (page.enabled && (page.email || page.phone)) lines.push('Contact: ' + [page.email, page.phone].filter(Boolean).join(' / '));
+    if (page.enabled && page.date) lines.push('Draft date: ' + page.date);
+    if (page.enabled && page.copyright) lines.push('Copyright: ' + page.copyright);
+    lines.push('');
+    data.lines.forEach(function (line) {
+      var text = line.text || '';
+      if (!text) {
+        lines.push('');
+        return;
+      }
+      if (line.type === 'character') lines.push(text.toUpperCase());
+      else if (line.type === 'scene') lines.push(text.toUpperCase());
+      else if (line.type === 'transition') lines.push('> ' + text.toUpperCase());
+      else lines.push(text);
+      lines.push('');
+    });
+    return lines.join('\n');
+  }
+
+
+  function getProjectFile(data) {
+    return JSON.stringify({
+      format: 'screenwriter.swscript',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      data: data
+    }, null, 2);
+  }
+
+  function download(filename, content, mimeType) {
+    var blob = content instanceof Blob ? content : new Blob([content], { type: mimeType || 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function printHtml(data) {
+    var page = getTitlePage(data);
+    var titlePage = '';
+    if (page.enabled) {
+      titlePage = '<section class="title-page">' +
+        '<div class="title-main">' + escapeHtml(page.title).toUpperCase() + '</div>' +
+        (page.writer ? '<div class="written-by">Written by<br>' + escapeHtml(page.writer) + '</div>' : '') +
+        '<div class="title-contact">' +
+          (page.email ? '<div>' + escapeHtml(page.email) + '</div>' : '') +
+          (page.phone ? '<div>' + escapeHtml(page.phone) + '</div>' : '') +
+          (page.date ? '<div>' + escapeHtml(page.date) + '</div>' : '') +
+          (page.copyright ? '<div>' + escapeHtml(page.copyright) + '</div>' : '') +
+        '</div>' +
+      '</section>';
+    }
+
+    var body = data.lines.map(function (line) {
+      return '<div class="line ' + escapeHtml(line.type || 'action') + '">' + escapeHtml(line.text || '') + '</div>';
+    }).join('');
+
+    return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>​</title>' +
+      '<style>' +
+      '@page{size:A4;margin:.75in 1in}html,body{background:#fff}body{font-family:"Courier New",Courier,monospace;font-size:12pt;line-height:1.15;color:#111;margin:0}.print-note{display:none}.title-page{height:9.4in;page-break-after:always;position:relative;text-align:center}.title-main{padding-top:2.2in;font-weight:bold}.written-by{margin-top:1.2in}.title-contact{position:absolute;left:0;right:0;bottom:.4in;text-align:left}.screenplay{min-height:9.4in}.line{min-height:1.15em;white-space:pre-wrap;margin:0 0 7px}.scene{text-transform:uppercase;margin-top:18px;font-weight:bold}.transition{text-transform:uppercase;text-align:right;margin-top:14px}.character{text-transform:uppercase;margin-left:265px;margin-top:14px;width:260px}.parenthetical{margin-left:205px;width:280px}.dialogue{margin-left:150px;width:420px}.shot{text-transform:uppercase;margin-top:14px}@media print{.print-note{display:none}}' +
+      '</style></head><body>' + titlePage + '<section class="screenplay">' + body + '</section></body></html>';
+  }
+
+  function printScript(data) {
+    if (window.ScreenwriterEditor && window.ScreenwriterEditor.toast) {
+      window.ScreenwriterEditor.toast('Print tip: turn off Headers and footers for saved PDF.');
+    }
+    var win = window.open('', '_blank');
+    if (!win) {
+      window.print();
+      return;
+    }
+    win.document.open();
+    win.document.write(printHtml(data));
+    win.document.close();
+    try { win.document.title = '\u200b'; } catch (e) {}
+    win.focus();
+    setTimeout(function () { win.print(); }, 250);
+  }
+
+  // Save PDF export: creates a real PDF file in JavaScript.
+  // No browser print dialog. No Chrome date/time. No about:blank footer.
+  function toPdfLatin(text) {
+    return (text || '').toString()
+      .replace(/\t/g, '    ')
+      .replace(/[\u2018\u2019]/g, "'")
+      .replace(/[\u201C\u201D]/g, '"')
+      .replace(/[\u2013\u2014]/g, '-')
+      .replace(/\u2026/g, '...')
+      .replace(/[^\x20-\x7E]/g, '?');
+  }
+
+  function pdfEscape(text) {
+    return toPdfLatin(text).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+  }
+
+  function pad(n, width) {
+    n = String(n);
+    while (n.length < width) n = '0' + n;
+    return n;
+  }
+
+  function wrapText(text, maxChars) {
+    text = toPdfLatin(text).replace(/\s+/g, ' ').trim();
+    if (!text) return [''];
+    var words = text.split(' ');
+    var lines = [];
+    var current = '';
+
+    words.forEach(function (word) {
+      if (word.length > maxChars) {
+        if (current) {
+          lines.push(current);
+          current = '';
+        }
+        while (word.length > maxChars) {
+          lines.push(word.slice(0, maxChars));
+          word = word.slice(maxChars);
+        }
+        current = word;
+        return;
+      }
+      var candidate = current ? current + ' ' + word : word;
+      if (candidate.length > maxChars) {
+        if (current) lines.push(current);
+        current = word;
+      } else {
+        current = candidate;
+      }
+    });
+    if (current) lines.push(current);
+    return lines.length ? lines : [''];
+  }
+
+  function lineStyle(type) {
+    type = type || 'action';
+    if (type === 'scene') return { x: 72, max: 62, before: 14, upper: true, bold: true };
+    if (type === 'transition') return { x: 0, max: 28, before: 14, upper: true, right: true };
+    if (type === 'character') return { x: 276, max: 28, before: 14, upper: true };
+    if (type === 'parenthetical') return { x: 222, max: 32, before: 0, upper: false };
+    if (type === 'dialogue') return { x: 180, max: 42, before: 0, upper: false };
+    if (type === 'shot') return { x: 72, max: 50, before: 14, upper: true };
+    return { x: 72, max: 62, before: 0, upper: false };
+  }
+
+  function makePdf(data) {
+    var pageWidth = 595.28;   // A4 width in points
+    var pageHeight = 841.89;  // A4 height in points
+    var marginTop = 72;
+    var marginBottom = 72;
+    var marginRight = 72;
+    var fontSize = 12;
+    var lineHeight = 14;
+    var charWidth = fontSize * 0.6;
+    var bodyPages = [];
+    var pages = [];
+    var currentOps = [];
+    var y = pageHeight - marginTop;
+    var lastType = '';
+
+    function newBodyPage() {
+      if (currentOps.length) bodyPages.push(currentOps);
+      currentOps = [];
+      y = pageHeight - marginTop;
+      lastType = '';
+    }
+
+    function ensureSpace(linesNeeded, extraBefore) {
+      var need = (extraBefore || 0) + (linesNeeded * lineHeight);
+      if (y - need < marginBottom) newBodyPage();
+    }
+
+    function writeAt(x, yy, text, size, bold) {
+      size = size || fontSize;
+      var fontName = bold ? 'F2' : 'F1';
+      currentOps.push('BT /' + fontName + ' ' + size + ' Tf 1 0 0 1 ' + x.toFixed(2) + ' ' + yy.toFixed(2) + ' Tm (' + pdfEscape(text) + ') Tj ET');
+    }
+
+    function writeCentered(ops, yy, text, size) {
+      size = size || fontSize;
+      var width = toPdfLatin(text).length * size * 0.6;
+      var x = (pageWidth - width) / 2;
+      ops.push('BT /F1 ' + size + ' Tf 1 0 0 1 ' + x.toFixed(2) + ' ' + yy.toFixed(2) + ' Tm (' + pdfEscape(text) + ') Tj ET');
+    }
+
+    function addTitlePage() {
+      var page = getTitlePage(data);
+      if (!page.enabled) return;
+      var ops = [];
+      writeCentered(ops, pageHeight - 210, page.title.toUpperCase(), 14);
+      if (page.writer) {
+        writeCentered(ops, pageHeight - 310, 'Written by', 12);
+        writeCentered(ops, pageHeight - 328, page.writer, 12);
+      }
+      var footer = [];
+      if (page.email) footer.push(page.email);
+      if (page.phone) footer.push(page.phone);
+      if (page.date) footer.push(page.date);
+      if (page.copyright) footer.push(page.copyright);
+      footer.forEach(function (line, index) {
+        ops.push('BT /F1 12 Tf 1 0 0 1 72.00 ' + (90 - index * 16).toFixed(2) + ' Tm (' + pdfEscape(line) + ') Tj ET');
+      });
+      pages.push(ops);
+    }
+
+    function addBodyLine(line, isFirstPrintable) {
+      var type = line.type || 'action';
+      var style = lineStyle(type);
+      var text = line.text || '';
+      text = toPdfLatin(text).trimEnd();
+
+      // Skip the starter empty transition line before SCENE 1.
+      if (!text.trim() && isFirstPrintable) return false;
+
+      if (style.upper) text = text.toUpperCase();
+      if (!text.trim()) {
+        ensureSpace(1, 0);
+        y -= lineHeight;
+        lastType = '';
+        return true;
+      }
+
+      var wrapped = wrapText(text, style.max);
+      var before = 0;
+      if (lastType && style.before) before = style.before;
+      ensureSpace(wrapped.length, before);
+      y -= before;
+
+      wrapped.forEach(function (part) {
+        var x = style.x;
+        if (style.right) {
+          x = pageWidth - marginRight - (part.length * charWidth);
+          if (x < 72) x = 72;
+        }
+        writeAt(x, y, part, fontSize, !!style.bold);
+        y -= lineHeight;
+      });
+      lastType = type;
+      return true;
+    }
+
+    addTitlePage();
+    newBodyPage();
+
+    var seenPrintable = false;
+    (data.lines || []).forEach(function (line) {
+      var had = addBodyLine(line || {}, !seenPrintable);
+      if (had && (line.text || '').trim()) seenPrintable = true;
+    });
+
+    if (currentOps.length) bodyPages.push(currentOps);
+    if (!bodyPages.length) bodyPages.push([]);
+    pages = pages.concat(bodyPages);
+
+    return buildPdfDocument(pages, pageWidth, pageHeight);
+  }
+
+  function buildPdfDocument(pageOps, pageWidth, pageHeight) {
+    var objects = [];
+    function addObject(str) {
+      objects.push(str);
+      return objects.length;
+    }
+
+    var fontId = addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>');
+    var boldFontId = addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold >>');
+    var pageIds = [];
+    var contentIds = [];
+
+    pageOps.forEach(function (ops) {
+      var stream = ops.join('\n') + '\n';
+      var contentId = addObject('<< /Length ' + stream.length + ' >>\nstream\n' + stream + 'endstream');
+      contentIds.push(contentId);
+      pageIds.push(null);
+    });
+
+    var pagesId = objects.length + pageOps.length + 1;
+    pageOps.forEach(function (_, index) {
+      var pageObj = '<< /Type /Page /Parent ' + pagesId + ' 0 R /MediaBox [0 0 ' + pageWidth.toFixed(2) + ' ' + pageHeight.toFixed(2) + '] /Resources << /Font << /F1 ' + fontId + ' 0 R /F2 ' + boldFontId + ' 0 R >> >> /Contents ' + contentIds[index] + ' 0 R >>';
+      pageIds[index] = addObject(pageObj);
+    });
+
+    var kids = pageIds.map(function (id) { return id + ' 0 R'; }).join(' ');
+    addObject('<< /Type /Pages /Kids [' + kids + '] /Count ' + pageIds.length + ' >>');
+    var catalogId = addObject('<< /Type /Catalog /Pages ' + pagesId + ' 0 R >>');
+
+    var pdf = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';
+    var offsets = [0];
+    objects.forEach(function (obj, index) {
+      offsets.push(pdf.length);
+      pdf += (index + 1) + ' 0 obj\n' + obj + '\nendobj\n';
+    });
+    var xref = pdf.length;
+    pdf += 'xref\n0 ' + (objects.length + 1) + '\n';
+    pdf += '0000000000 65535 f \n';
+    for (var i = 1; i < offsets.length; i += 1) {
+      pdf += pad(offsets[i], 10) + ' 00000 n \n';
+    }
+    pdf += 'trailer\n<< /Size ' + (objects.length + 1) + ' /Root ' + catalogId + ' 0 R >>\n';
+    pdf += 'startxref\n' + xref + '\n%%EOF';
+
+    var bytes = new Uint8Array(pdf.length);
+    for (var j = 0; j < pdf.length; j += 1) bytes[j] = pdf.charCodeAt(j) & 0xff;
+    return new Blob([bytes], { type: 'application/pdf' });
+  }
+
+  function exportCleanPdf(data, filenameBase) {
+    var blob = makePdf(data);
+    download(filenameBase + '.pdf', blob, 'application/pdf');
+    if (window.ScreenwriterEditor && window.ScreenwriterEditor.toast) {
+      window.ScreenwriterEditor.toast('PDF saved. No browser headers or footers.');
+    }
+  }
+
+  window.ScreenwriterExport = {
+    init: function () {
+      document.querySelectorAll('[data-export]').forEach(function (button) {
+        button.addEventListener('click', function (event) {
+          event.preventDefault();
+          if (!window.ScreenwriterEditor) return;
+          var data = window.ScreenwriterEditor.serialize();
+          var name = (data.title || 'script').trim().replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'script';
+          var type = button.getAttribute('data-export');
+          if (type === 'txt') download(name + '.txt', getPlainText(data), 'text/plain;charset=utf-8');
+          if (type === 'fountain') download(name + '.fountain', getFountain(data), 'text/plain;charset=utf-8');
+          if (type === 'project') download(name + '.swscript', getProjectFile(data), 'application/json;charset=utf-8');
+          if (type === 'pdf') exportCleanPdf(data, name);
+          if (type === 'print') printScript(data);
+          if (window.ScreenwriterDropdown) window.ScreenwriterDropdown.closeAll();
+        });
+      });
+    },
+    plainText: getPlainText,
+    fountain: getFountain,
+    projectFile: getProjectFile,
+    cleanPdf: makePdf
+  };
+})();
+
+</script>
+  <script>
+(function () {
+  var TYPES = ['scene', 'action', 'character', 'parenthetical', 'dialogue', 'transition', 'shot'];
+  var PLACEHOLDERS = {
+    scene: 'SCENE 1 INT./EXT. LOCATION - DAY',
+    action: 'Action...',
+    character: 'CHARACTER',
+    parenthetical: '(beat)',
+    dialogue: 'Dialogue...',
+    transition: 'CUT TO:',
+    shot: 'SHOT'
+  };
+  var STORAGE_KEY = 'screenwriter_legacy_autosave_disabled_v1';
+  var PREFIXES = ['INT.', 'EXT.', 'INT./EXT.', 'EXT./INT.'];
+  var TIMES = ['DAY', 'NIGHT', 'EVENING', 'MORNING', 'SUNSET', 'SUNRISE', 'CONTINUOUS', 'LATER', 'MOMENTS LATER', 'SAME TIME', 'DAWN', 'DUSK'];
+  var TRANSITIONS = ['CUT TO:', 'FADE IN:', 'FADE OUT:', 'FADE TO BLACK.', 'DISSOLVE TO:', 'SMASH CUT TO:', 'MATCH CUT TO:', 'JUMP CUT TO:', 'HARD CUT TO:', 'WIPE TO:', 'BACK TO:', 'INTERCUT WITH:', 'SUPER:', 'TITLE CARD:', 'END CREDITS'];
+  var COMMON_LOCATIONS = ['COFFEE SHOP', 'COLLEGE', 'COURTROOM', 'CORRIDOR', 'POLICE STATION', 'HOSPITAL', 'AIRPORT', 'BANK', 'HOUSE', 'OFFICE', 'STREET', 'RESTAURANT', 'HOSTEL', 'CLASSROOM', 'PARKING LOT'];
+
+  function defaultStartLines() {
+    return [
+      { type: 'transition', text: '' },
+      { type: 'scene', text: 'SCENE 1 ' }
+    ];
+  }
+
+  var editor;
+  var suggestionsBox;
+  var saveTimer;
+  var lastInputPushTimer;
+  var suggestionState = {
+    visible: false,
+    title: '',
+    items: [],
+    active: 0,
+    mode: '',
+    line: null
+  };
+  var suggestionMuteUntil = 0;
+
+  function toast(message) {
+    var el = document.querySelector('#toast');
+    if (!el) return;
+    el.textContent = message;
+    el.classList.add('show');
+    clearTimeout(el._timer);
+    el._timer = setTimeout(function () { el.classList.remove('show'); }, 1700);
+  }
+
+  function unique(items) {
+    var seen = Object.create(null);
+    var out = [];
+    items.forEach(function (item) {
+      item = (item || '').trim().toUpperCase().replace(/\s+/g, ' ');
+      if (!item || seen[item]) return;
+      seen[item] = true;
+      out.push(item);
+    });
+    return out;
+  }
+
+  function normalizeSpaces(text) {
+    return (text || '').replace(/\u00a0/g, ' ').replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ');
+  }
+
+  function getNextSceneNumber() {
+    // Scene numbers must follow the visible document order.
+    // Do not use the highest old number, because after deleting scenes the first page
+    // can wrongly become SCENE 6 / SCENE 7.
+    return editor.querySelectorAll('.line.scene').length + 1;
+  }
+
+  function renumberSceneHeadings() {
+    var n = 1;
+    editor.querySelectorAll('.line.scene').forEach(function (line) {
+      var text = normalizeSpaces(line.textContent || '').trimStart();
+      if (!text) {
+        line.textContent = 'SCENE ' + n + ' ';
+        n += 1;
+        return;
+      }
+      if (/^SCENE\s+\d+\b/i.test(text)) {
+        line.textContent = text.replace(/^SCENE\s+\d+\b/i, 'SCENE ' + n);
+      } else if (/^(INT\.|EXT\.|INT\.\/EXT\.|EXT\.\/INT\.|INT\b|EXT\b)/i.test(text)) {
+        line.textContent = 'SCENE ' + n + ' ' + normalizeSceneCore(text);
+      }
+      n += 1;
+    });
+  }
+
+  function makeSceneStarter() {
+    return 'SCENE ' + getNextSceneNumber() + ' ';
+  }
+
+  function splitSceneNumberPrefix(text) {
+    var raw = normalizeSpaces(text || '').trimStart();
+    var match = raw.match(/^(SCENE\s+\d+)\s*(.*)$/i);
+    if (!match) return { label: '', rest: raw, consumed: 0 };
+    var consumed = raw.length - (match[2] || '').length;
+    return { label: match[1].toUpperCase(), rest: match[2] || '', consumed: consumed };
+  }
+
+  function getLeadingTransition(text) {
+    var raw = normalizeSpaces(text || '').trimStart();
+    var upper = raw.toUpperCase();
+    var sorted = TRANSITIONS.slice().sort(function (a, b) { return b.length - a.length; });
+    for (var i = 0; i < sorted.length; i += 1) {
+      var item = sorted[i];
+      if (upper === item) return { transition: item, rest: '', length: item.length };
+      if (upper.indexOf(item + ' ') === 0) {
+        return { transition: item, rest: raw.slice(item.length).trimStart(), length: item.length };
+      }
+    }
+    return null;
+  }
+
+  function stripLeadingTransition(text) {
+    var found = getLeadingTransition(text);
+    return found && found.rest ? found.rest : text;
+  }
+
+  function knownTimeAtEnd(rest) {
+    var upper = rest.trim().toUpperCase();
+    var found = '';
+    TIMES.forEach(function (time) {
+      if (upper === time || upper.endsWith(' ' + time)) {
+        if (time.length > found.length) found = time;
+      }
+    });
+    return found;
+  }
+
+  function normalizeSceneCore(text) {
+    var scene = splitSceneNumberPrefix(text);
+    var label = scene.label;
+    var value = normalizeSpaces(scene.rest).toUpperCase().trimStart();
+
+    value = value
+      .replace(/^INT\s*\/\s*EXT\.?/, 'INT./EXT.')
+      .replace(/^EXT\s*\/\s*INT\.?/, 'EXT./INT.')
+      .replace(/^INT\b\.?/, 'INT.')
+      .replace(/^EXT\b\.?/, 'EXT.');
+
+    var match = value.match(/^(INT\.|EXT\.|INT\.\/EXT\.|EXT\.\/INT\.)\s*(.*)$/);
+    if (!match) return label ? (label + (value ? ' ' + value : '')) : value;
+
+    var prefix = match[1];
+    var rest = match[2] || '';
+    if (!rest) return label ? label + ' ' + prefix : prefix;
+
+    if (rest.indexOf('-') === -1) {
+      var time = knownTimeAtEnd(rest);
+      if (time) {
+        var location = rest.slice(0, rest.length - time.length).trim();
+        if (location) {
+          var core = prefix + ' ' + location + ' - ' + time;
+          return label ? label + ' ' + core : core;
+        }
+      }
+    }
+
+    var normalized = prefix + ' ' + rest.replace(/\s*-\s*/g, ' - ');
+    return label ? label + ' ' + normalized : normalized;
+  }
+
+  function normalizeScene(text) {
+    var combo = getLeadingTransition(text);
+    if (combo && combo.rest) {
+      return combo.transition + ' ' + normalizeSceneCore(combo.rest);
+    }
+    return normalizeSceneCore(text);
+  }
+
+  function normalizeText(type, text) {
+    text = text || '';
+    if (type === 'scene') return normalizeScene(text);
+    if (type === 'character' || type === 'transition' || type === 'shot') return normalizeSpaces(text).toUpperCase().trimStart();
+    if (type === 'parenthetical') {
+      text = normalizeSpaces(text).trimStart();
+      if (text && text.charAt(0) !== '(') text = '(' + text;
+      return text;
+    }
+    return text.replace(/\u00a0/g, ' ');
+  }
+
+  function guessType(text) {
+    var t = (text || '').trim();
+    var upper = t.toUpperCase();
+    var combo = getLeadingTransition(t);
+    var sceneText = combo && combo.rest ? combo.rest : t;
+    var sceneParts = splitSceneNumberPrefix(sceneText);
+    var sceneRest = (sceneParts.rest || '').toUpperCase();
+    if (/^SCENE\s+\d+\b/i.test(sceneText) || /^(INT|EXT)(\.|\s|\/)/.test(sceneRest)) return 'scene';
+    if (TRANSITIONS.indexOf(upper) !== -1 || /^(CUT|FADE|DISSOLVE|SMASH CUT|MATCH CUT|JUMP CUT|HARD CUT|WIPE|BACK|INTERCUT|SUPER|TITLE CARD|END CREDITS)\b/i.test(t)) return 'transition';
+    if (/^\(.+\)$/.test(t)) return 'parenthetical';
+    if (upper.length <= 30 && upper === t && /[A-Z]/.test(t) && !/[.!?]$/.test(t)) return 'character';
+    return 'action';
+  }
+
+  function nextType(currentType) {
+    if (currentType === 'scene') return 'action';
+    if (currentType === 'character') return 'dialogue';
+    if (currentType === 'parenthetical') return 'dialogue';
+    if (currentType === 'dialogue') return 'action';
+    if (currentType === 'transition') return 'scene';
+    return 'action';
+  }
+
+  function nextShortcutType(currentType) {
+    if (currentType === 'transition') return 'scene';
+    if (currentType === 'scene') return 'action';
+    if (currentType === 'action') return 'character';
+    if (currentType === 'character') return 'dialogue';
+    if (currentType === 'dialogue') return 'transition';
+    if (currentType === 'parenthetical') return 'dialogue';
+    if (currentType === 'shot') return 'action';
+    return 'action';
+  }
+
+  function createLine(type, text) {
+    var line = document.createElement('div');
+    type = type || 'action';
+    line.className = 'line ' + type;
+    line.dataset.type = type;
+    line.dataset.placeholder = PLACEHOLDERS[type] || '';
+    line.contentEditable = 'true';
+    line.spellcheck = true;
+    line.textContent = normalizeText(type, text || '');
+    return line;
+  }
+
+  function setLineType(line, type, keepCaret) {
+    if (!line || TYPES.indexOf(type) === -1) return;
+    var offset = getCaretOffset(line);
+    TYPES.forEach(function (t) { line.classList.remove(t); });
+    line.classList.add(type);
+    line.dataset.type = type;
+    line.dataset.placeholder = PLACEHOLDERS[type] || '';
+    line.textContent = normalizeText(type, line.textContent || '');
+    if (keepCaret) setCaretOffset(line, Math.min(offset, (line.textContent || '').length));
+    focusLine(line);
+  }
+
+  function serialize() {
+    return {
+      title: (document.querySelector('#scriptTitle').value || 'Untitled Script'),
+      titlePage: window.ScreenwriterTitlePage ? window.ScreenwriterTitlePage.getData() : null,
+      lines: Array.from(editor.querySelectorAll('.line')).map(function (line) {
+        return { type: line.dataset.type || 'action', text: line.textContent || '' };
+      })
+    };
+  }
+
+  function deserialize(data) {
+    editor.innerHTML = '';
+    if (data && data.title && document.querySelector('#scriptTitle')) {
+      document.querySelector('#scriptTitle').value = data.title;
+    }
+    if (window.ScreenwriterTitlePage) {
+      window.ScreenwriterTitlePage.setData(data && data.titlePage ? data.titlePage : { enabled: false, title: data && data.title ? data.title : 'Untitled Script' });
+    }
+    var lines = data && Array.isArray(data.lines) ? data.lines : null;
+    if (!lines || !lines.length) {
+      lines = defaultStartLines();
+    }
+    lines.forEach(function (item) { editor.appendChild(createLine(item.type || guessType(item.text), item.text || '')); });
+    renumberSceneHeadings();
+    updateAll();
+  }
+
+  function placeCaretAtEnd(element) {
+    if (!element) return;
+    element.focus();
+    var range = document.createRange();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  function getCaretOffset(element) {
+    var selection = window.getSelection();
+    if (!selection.rangeCount) return (element.textContent || '').length;
+    var range = selection.getRangeAt(0).cloneRange();
+    range.selectNodeContents(element);
+    try {
+      range.setEnd(selection.anchorNode, selection.anchorOffset);
+      return range.toString().length;
+    } catch (e) {
+      return (element.textContent || '').length;
+    }
+  }
+
+  function setCaretOffset(element, offset) {
+    element.focus();
+    var textNode;
+    if (!element.firstChild) element.appendChild(document.createTextNode(''));
+    if (element.childNodes.length === 1 && element.firstChild.nodeType === Node.TEXT_NODE) {
+      textNode = element.firstChild;
+    } else {
+      element.textContent = element.textContent || '';
+      textNode = element.firstChild || element.appendChild(document.createTextNode(''));
+    }
+    offset = Math.max(0, Math.min(offset, textNode.textContent.length));
+    var range = document.createRange();
+    range.setStart(textNode, offset);
+    range.collapse(true);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  function setCaretAfterSuggestion(line) {
+    // After replacing content and renumbering scenes, browsers can reset the
+    // contenteditable caret to the start. Always put it back at the right side
+    // of the accepted suggestion.
+    if (!line) return;
+    setTimeout(function () {
+      setCaretOffset(line, (line.textContent || '').length);
+      focusLine(line);
+    }, 0);
+  }
+
+  function getCurrentLine() {
+    var selection = window.getSelection();
+    if (selection && selection.rangeCount) {
+      var node = selection.anchorNode;
+      if (node && node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+      if (node && node.closest) {
+        var found = node.closest('.line');
+        if (found && editor.contains(found)) return found;
+      }
+    }
+    return editor.querySelector('.line');
+  }
+
+  function getCurrentLineStrict() {
+    // Same as getCurrentLine(), but never falls back to the first/active line.
+    // This prevents suggestions from reopening when the writer clicks blank white
+    // space on the page.
+    var selection = window.getSelection();
+    if (!selection || !selection.rangeCount) return null;
+    var node = selection.anchorNode;
+    if (node && node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+    if (node && node.closest) {
+      var found = node.closest('.line');
+      if (found && editor.contains(found)) return found;
+    }
+    return null;
+  }
+
+  function activeLineAllowsSuggestions() {
+    var active = document.activeElement;
+    if (!active || !active.closest) return false;
+    var activeLine = active.closest('.line');
+    return !!(activeLine && editor.contains(activeLine));
+  }
+
+  function focusLine(line) {
+    if (!line) return;
+    editor.querySelectorAll('.line').forEach(function (item) { item.classList.remove('active-line'); });
+    line.classList.add('active-line');
+    if (window.ScreenwriterToolbar) window.ScreenwriterToolbar.updateToolbar(line.dataset.type || 'action');
+  }
+
+  function updateCounts() {
+    var text = editor.textContent || '';
+    var words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    var lineCount = editor.querySelectorAll('.line').length;
+    var pages = Math.max(1, Math.ceil(lineCount / 55));
+    var wordEl = document.querySelector('#wordCount');
+    var pageEl = document.querySelector('#pageCount');
+    if (wordEl) wordEl.textContent = words + ' words';
+    if (pageEl) pageEl.textContent = pages + ' page' + (pages === 1 ? '' : 's');
+  }
+
+  function getSceneBlocks() {
+    var sceneLines = Array.from(editor.querySelectorAll('.line.scene'));
+    return sceneLines.map(function (sceneLine) {
+      var nodes = [sceneLine];
+      var cursor = sceneLine.nextElementSibling;
+      while (cursor && cursor.classList && cursor.classList.contains('line') && cursor.dataset.type !== 'scene') {
+        nodes.push(cursor);
+        cursor = cursor.nextElementSibling;
+      }
+      return {
+        line: sceneLine,
+        nodes: nodes,
+        text: (sceneLine.textContent || '').trim()
+      };
+    });
+  }
+
+  function moveSceneBlock(fromIndex, insertIndex) {
+    var blocks = getSceneBlocks();
+    if (fromIndex < 0 || fromIndex >= blocks.length) return;
+
+    insertIndex = Math.max(0, Math.min(insertIndex, blocks.length));
+    if (insertIndex === fromIndex || insertIndex === fromIndex + 1) return;
+
+    var moving = blocks[fromIndex];
+    var fragment = document.createDocumentFragment();
+    moving.nodes.forEach(function (node) { fragment.appendChild(node); });
+
+    var updatedBlocks = getSceneBlocks();
+    if (fromIndex < insertIndex) insertIndex -= 1;
+
+    var referenceBlock = updatedBlocks[insertIndex];
+    var referenceNode = referenceBlock ? referenceBlock.line : null;
+    editor.insertBefore(fragment, referenceNode);
+
+    renumberSceneHeadings();
+    updateAll();
+    saveNow(false);
+    if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+
+    var movedLine = moving.nodes[0];
+    if (movedLine) {
+      movedLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      placeCaretAtEnd(movedLine);
+      focusLine(movedLine);
+    }
+    hideSuggestions();
+    toast('Scene moved');
+  }
+
+  function updateSceneList() {
+    var list = document.querySelector('#sceneList');
+    if (!list) return;
+    var scenes = getSceneBlocks().filter(function (item) { return item.text; });
+
+    list.innerHTML = '';
+    if (!scenes.length) {
+      list.classList.add('empty');
+      list.textContent = 'No scene headings yet.';
+      return;
+    }
+
+    list.classList.remove('empty');
+    scenes.forEach(function (scene, index) {
+      var card = document.createElement('div');
+      card.className = 'scene-item';
+      card.draggable = true;
+      card.dataset.sceneIndex = String(index);
+
+      var dragHandle = document.createElement('span');
+      dragHandle.className = 'scene-drag-handle';
+      dragHandle.textContent = '☰';
+      dragHandle.title = 'Drag to reorder';
+      card.appendChild(dragHandle);
+
+      var jump = document.createElement('button');
+      jump.className = 'scene-jump';
+      jump.type = 'button';
+      jump.textContent = (index + 1) + '. ' + scene.text;
+      jump.addEventListener('click', function () {
+        scene.line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        placeCaretAtEnd(scene.line);
+        focusLine(scene.line);
+        hideSuggestions();
+      });
+      card.appendChild(jump);
+
+      var actions = document.createElement('div');
+      actions.className = 'scene-actions';
+
+      var up = document.createElement('button');
+      up.type = 'button';
+      up.textContent = '↑';
+      up.title = 'Move scene up';
+      up.disabled = index === 0;
+      up.addEventListener('click', function (event) {
+        event.stopPropagation();
+        moveSceneBlock(index, index - 1);
+      });
+      actions.appendChild(up);
+
+      var down = document.createElement('button');
+      down.type = 'button';
+      down.textContent = '↓';
+      down.title = 'Move scene down';
+      down.disabled = index === scenes.length - 1;
+      down.addEventListener('click', function (event) {
+        event.stopPropagation();
+        moveSceneBlock(index, index + 2);
+      });
+      actions.appendChild(down);
+      card.appendChild(actions);
+
+      card.addEventListener('dragstart', function (event) {
+        card.classList.add('dragging');
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', String(index));
+      });
+
+      card.addEventListener('dragend', function () {
+        card.classList.remove('dragging');
+        list.querySelectorAll('.drop-before, .drop-after').forEach(function (item) {
+          item.classList.remove('drop-before', 'drop-after');
+        });
+      });
+
+      card.addEventListener('dragover', function (event) {
+        event.preventDefault();
+        var rect = card.getBoundingClientRect();
+        var after = event.clientY > rect.top + rect.height / 2;
+        list.querySelectorAll('.drop-before, .drop-after').forEach(function (item) {
+          if (item !== card) item.classList.remove('drop-before', 'drop-after');
+        });
+        card.classList.toggle('drop-before', !after);
+        card.classList.toggle('drop-after', after);
+      });
+
+      card.addEventListener('dragleave', function () {
+        card.classList.remove('drop-before', 'drop-after');
+      });
+
+      card.addEventListener('drop', function (event) {
+        event.preventDefault();
+        var fromIndex = Number(event.dataTransfer.getData('text/plain'));
+        if (Number.isNaN(fromIndex)) return;
+        var rect = card.getBoundingClientRect();
+        var after = event.clientY > rect.top + rect.height / 2;
+        moveSceneBlock(fromIndex, after ? index + 1 : index);
+      });
+
+      list.appendChild(card);
+    });
+  }
+
+  function collectLocations() {
+    var locations = [];
+    editor.querySelectorAll('.line.scene').forEach(function (line) {
+      var text = stripLeadingTransition((line.textContent || '').trim().toUpperCase());
+      text = splitSceneNumberPrefix(text).rest.toUpperCase();
+      var match = text.match(/^(INT\.|EXT\.|INT\.\/EXT\.|EXT\.\/INT\.)\s+(.+?)(?:\s+-\s+.+)?$/);
+      if (match && match[2]) locations.push(match[2]);
+    });
+    return unique(locations.concat(COMMON_LOCATIONS));
+  }
+
+  function collectCharacters() {
+    var names = [];
+    editor.querySelectorAll('.line.character').forEach(function (line) {
+      var text = (line.textContent || '').trim().toUpperCase();
+      text = text.replace(/\s+\((V\.O\.|O\.S\.)\)$/i, '');
+      if (text.length > 1 && text.length <= 32) names.push(text);
+    });
+    return unique(names).sort();
+  }
+
+  function filterItems(items, query) {
+    query = (query || '').trim().toUpperCase();
+    if (!query) return items.slice(0, 8);
+    var starts = items.filter(function (item) { return item.indexOf(query) === 0; });
+    var contains = items.filter(function (item) { return item.indexOf(query) > 0; });
+    return unique(starts.concat(contains)).slice(0, 8);
+  }
+
+  function getPrefixMatch(text) {
+    return text.match(/^(INT\.|EXT\.|INT\.\/EXT\.|EXT\.\/INT\.)\s*/);
+  }
+
+  function getSceneEditContext(line) {
+    var raw = line.textContent || '';
+    var caret = getCaretOffset(line);
+    var transition = '';
+    var sceneText = raw;
+    var sceneCaret = caret;
+
+    var combo = getLeadingTransition(raw);
+    if (combo) {
+      transition = combo.transition;
+      var transitionStart = raw.toUpperCase().indexOf(combo.transition);
+      var transitionEnd = transitionStart + combo.transition.length;
+      sceneText = raw.slice(transitionEnd);
+      sceneCaret = Math.max(0, caret - transitionEnd);
+      var leading = sceneText.match(/^\s*/)[0];
+      sceneText = sceneText.slice(leading.length);
+      sceneCaret = Math.max(0, sceneCaret - leading.length);
+    }
+
+    var label = '';
+    var labelMatch = sceneText.match(/^(\s*SCENE\s+\d+\s*)/i);
+    if (labelMatch) {
+      label = normalizeSpaces(labelMatch[1]).trim().toUpperCase();
+      sceneText = sceneText.slice(labelMatch[1].length);
+      sceneCaret = Math.max(0, sceneCaret - labelMatch[1].length);
+    }
+
+    return {
+      raw: raw,
+      transition: transition,
+      label: label,
+      rest: sceneText,
+      restCaret: Math.max(0, Math.min(sceneCaret, sceneText.length))
+    };
+  }
+
+  function replaceOnlyScenePrefix(line, value, meta) {
+    var ctx = getSceneEditContext(line);
+    var transition = (meta && meta.transition) || ctx.transition || '';
+    var label = (meta && meta.sceneLabel) || ctx.label || '';
+    var rest = ctx.rest || '';
+    var restCaret = ctx.restCaret || 0;
+
+    var startMatch = rest.match(/^\s*/);
+    var start = startMatch ? startMatch[0].length : 0;
+    var afterStart = rest.slice(start);
+    var upperAfterStart = afterStart.toUpperCase();
+    var consume = 0;
+
+    PREFIXES.slice().sort(function (a, b) { return b.length - a.length; }).some(function (prefix) {
+      if (upperAfterStart.indexOf(prefix) === 0) {
+        consume = prefix.length;
+        return true;
+      }
+      return false;
+    });
+
+    if (!consume) {
+      var tokenMatch = afterStart.match(/^[A-Z./]+/i);
+      var token = tokenMatch ? tokenMatch[0] : '';
+      var tokenUpper = token.toUpperCase();
+      var looksLikePartialPrefix = /^(I|IN|INT|INT\.|INT\/|INT\.\/|INT\.\/E|INT\.\/EX|INT\.\/EXT|INT\.\/EXT\.|E|EX|EXT|EXT\.|EXT\/|EXT\.\/|EXT\.\/I|EXT\.\/IN|EXT\.\/INT|EXT\.\/INT\.)$/.test(tokenUpper);
+      if (looksLikePartialPrefix) {
+        consume = token.length;
+      }
+    }
+
+    var end = start + consume;
+    while (end < rest.length && /\s/.test(rest.charAt(end))) end += 1;
+    var remainder = rest.slice(end).trimStart();
+    var sceneCore = value + (remainder ? ' ' + remainder : ' ');
+    line.textContent = (transition ? transition + ' ' : '') + (label ? label + ' ' : '') + sceneCore;
+  }
+
+  function buildSceneSuggestions(line) {
+    var rawText = line.textContent || '';
+    var caret = getCaretOffset(line);
+    var combo = getLeadingTransition(rawText);
+    var transitionPrefix = '';
+    var textForScene = rawText;
+    var sceneCaret = caret;
+
+    if (combo) {
+      transitionPrefix = combo.transition;
+      var transitionEnd = rawText.toUpperCase().indexOf(combo.transition) + combo.transition.length;
+      textForScene = rawText.slice(transitionEnd).trimStart();
+      sceneCaret = Math.max(0, caret - transitionEnd);
+    }
+
+    var sceneLabel = '';
+    var labelMatch = textForScene.match(/^(\s*SCENE\s+\d+\s*)/i);
+    if (labelMatch) {
+      sceneLabel = normalizeSpaces(labelMatch[1]).trim().toUpperCase();
+      textForScene = textForScene.slice(labelMatch[1].length);
+      sceneCaret = Math.max(0, sceneCaret - labelMatch[1].length);
+    }
+
+    var text = textForScene.toUpperCase();
+    var before = text.slice(0, sceneCaret);
+    var trimmed = before.trimStart();
+    var prefixMatch = getPrefixMatch(trimmed);
+    var modePrefix = transitionPrefix ? 'combo-' : '';
+
+    if (!prefixMatch) {
+      var q = trimmed.replace(/[^A-Z/.]/g, '');
+      // When the line already has SCENE number but no INT/EXT yet, show every option.
+      // Old bug: it forced q = 'I', so EXT. disappeared.
+      if (!q && (transitionPrefix || sceneLabel)) q = '';
+      if (q && !/^[IE]/.test(q)) return null;
+      if (!q && !transitionPrefix && !sceneLabel) return null;
+      var prefixes = filterItems(PREFIXES, q);
+      if (!prefixes.length) return null;
+      return { title: sceneLabel ? 'Scene heading' : (transitionPrefix ? 'Scene after transition' : 'Scene heading'), mode: modePrefix + 'prefix', items: prefixes, transition: transitionPrefix, sceneLabel: sceneLabel };
+    }
+
+    var prefix = prefixMatch[1];
+    var afterPrefix = trimmed.slice(prefixMatch[0].length);
+    var dashIndex = afterPrefix.lastIndexOf('-');
+
+    if (dashIndex === -1) {
+      var locationQuery = afterPrefix.trimStart();
+      if (!before.endsWith(' ') && locationQuery.length < 1 && !transitionPrefix && !sceneLabel) return null;
+      var locations = filterItems(collectLocations(), locationQuery);
+      if (!locations.length) return null;
+      return { title: 'Recent locations', mode: modePrefix + 'location', items: locations, prefix: prefix, transition: transitionPrefix, sceneLabel: sceneLabel };
+    }
+
+    var timeQuery = afterPrefix.slice(dashIndex + 1).trimStart();
+    var timeItems = filterItems(TIMES, timeQuery);
+    if (!timeItems.length) return null;
+    return { title: 'Time of day', mode: modePrefix + 'time', items: timeItems, prefix: prefix, transition: transitionPrefix, sceneLabel: sceneLabel };
+  }
+
+  function buildCharacterSuggestions(line) {
+    var text = line.textContent || '';
+    var caret = getCaretOffset(line);
+    var before = text.slice(0, caret).toUpperCase().trim();
+    if (!before || before.length > 24 || /\s/.test(before)) return null;
+
+    var base = filterItems(collectCharacters(), before);
+    var items = [];
+    base.forEach(function (name) {
+      items.push(name);
+      items.push(name + ' (V.O.)');
+      items.push(name + ' (O.S.)');
+    });
+    items = unique(items).slice(0, 9);
+    if (!items.length) return null;
+    return { title: 'Characters', mode: 'character', items: items };
+  }
+
+  function buildTransitionSuggestions(line, forceAll) {
+    var text = line.textContent || '';
+    var caret = getCaretOffset(line);
+    var before = text.slice(0, caret).toUpperCase().trim();
+    var type = line.dataset.type || 'action';
+
+    // Important fix:
+    // If the writer already chose a Transition line and deletes the text,
+    // the assistant should not go silent. Empty Transition line = show all transitions.
+    if (forceAll || (type === 'transition' && !before)) {
+      return { title: 'Transitions', mode: 'transition', items: TRANSITIONS.slice(0, 12) };
+    }
+
+    if (!before || before.length > 24) return null;
+
+    var items = filterItems(TRANSITIONS, before);
+    if (!items.length) return null;
+    return { title: 'Transitions', mode: 'transition', items: items };
+  }
+
+  function shouldTreatAsScene(line) {
+    var type = line.dataset.type || 'action';
+    var raw = (line.textContent || '').trim();
+    var text = raw.toUpperCase();
+    var combo = getLeadingTransition(raw);
+    var sceneText = combo ? (combo.rest || '') : raw;
+    var sceneParts = splitSceneNumberPrefix(sceneText);
+    var rest = (sceneParts.rest || '').toUpperCase();
+    if (sceneParts.label) return true;
+    if (combo && (/^(I|IN|INT|INT\.|E|EX|EXT|EXT\.|INT\/|EXT\/)/.test(rest) || !rest.trim())) return true;
+    if (type === 'scene') return true;
+    if (/^(I|IN|INT|INT\.|E|EX|EXT|EXT\.|INT\/|EXT\/)/.test(text) && text.length <= 50) return true;
+    return false;
+  }
+
+  function shouldTreatAsCharacter(line) {
+    var type = line.dataset.type || 'action';
+    var text = (line.textContent || '').trim();
+    if (type === 'character') return true;
+    if (type !== 'action') return false;
+    if (!text || text.length > 24 || /\s/.test(text)) return false;
+    return collectCharacters().some(function (name) { return name.indexOf(text.toUpperCase()) === 0; });
+  }
+
+  function shouldTreatAsTransition(line) {
+    var type = line.dataset.type || 'action';
+    var text = (line.textContent || '').trim().toUpperCase();
+    if (type === 'transition') return true;
+    if (type !== 'action') return false;
+    if (!text || text.length > 24) return false;
+    if (/^(CUT|FA|FAD|FADE|DIS|DISS|DISSOLVE|SMA|SMASH|MAT|MATCH|JUM|JUMP|HAR|HARD|WIP|WIPE|BAC|BACK|INTC|INTER|INTERCUT|SUP|SUPER|TIT|TITLE|END)/.test(text)) return true;
+    return false;
+  }
+
+  function updateSuggestions() {
+    if (suggestionsAreMuted()) return hideSuggestions();
+    if (!activeLineAllowsSuggestions()) return hideSuggestions();
+    var line = getCurrentLineStrict();
+    if (!line) return hideSuggestions();
+
+    var result = null;
+    if (shouldTreatAsScene(line)) result = buildSceneSuggestions(line);
+    if (!result && shouldTreatAsCharacter(line)) result = buildCharacterSuggestions(line);
+    if (!result && shouldTreatAsTransition(line)) result = buildTransitionSuggestions(line, false);
+
+    if (!result || !result.items || !result.items.length) return hideSuggestions();
+    showSuggestions(line, result.title, result.mode, result.items, result);
+  }
+
+  function openTransitionSuggestions() {
+    var line = getCurrentLine();
+    if (!line) return false;
+    setLineType(line, 'transition', true);
+    var result = buildTransitionSuggestions(line, true);
+    if (!result || !result.items || !result.items.length) return false;
+    showSuggestions(line, result.title, result.mode, result.items, result);
+    return true;
+  }
+
+  function showSuggestions(line, title, mode, items, meta) {
+    suggestionState = { visible: true, title: title, items: items, active: 0, mode: mode, line: line, meta: { transition: (meta && meta.transition) || '', prefix: (meta && meta.prefix) || '', sceneLabel: (meta && meta.sceneLabel) || '' } };
+    suggestionsBox.innerHTML = '';
+    suggestionsBox.style.maxHeight = '';
+
+    var titleEl = document.createElement('div');
+    titleEl.className = 'suggestion-title';
+    titleEl.textContent = title;
+    suggestionsBox.appendChild(titleEl);
+
+    items.forEach(function (item, index) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'suggestion-item' + (index === 0 ? ' active' : '');
+      button.textContent = item;
+      button.addEventListener('mousedown', function (event) {
+        event.preventDefault();
+        applySuggestion(index);
+      });
+      suggestionsBox.appendChild(button);
+    });
+
+    positionSuggestions(line);
+    suggestionsBox.hidden = false;
+  }
+
+  function positionSuggestions(line) {
+    if (!suggestionsBox || !line) return;
+
+    var margin = 10;
+    var gap = 8;
+    var rect = line.getBoundingClientRect();
+
+    // Render invisibly first so we can measure the real popup height.
+    // This avoids the old bug where the popup was clamped upward and covered
+    // the line the writer was typing.
+    suggestionsBox.hidden = false;
+    suggestionsBox.style.visibility = 'hidden';
+    suggestionsBox.style.left = '0px';
+    suggestionsBox.style.top = '0px';
+    suggestionsBox.style.maxHeight = '260px';
+
+    var boxRect = suggestionsBox.getBoundingClientRect();
+    var boxWidth = boxRect.width || 260;
+    var boxHeight = boxRect.height || 180;
+
+    var belowSpace = window.innerHeight - rect.bottom - gap - margin;
+    var aboveSpace = rect.top - gap - margin;
+    var placeBelow = belowSpace >= Math.min(boxHeight, 160) || belowSpace >= aboveSpace;
+
+    var availableHeight = placeBelow ? belowSpace : aboveSpace;
+    availableHeight = Math.max(96, Math.min(260, availableHeight));
+    suggestionsBox.style.maxHeight = availableHeight + 'px';
+
+    // Re-measure after maxHeight adjustment.
+    boxRect = suggestionsBox.getBoundingClientRect();
+    boxHeight = Math.min(boxRect.height || boxHeight, availableHeight);
+    boxWidth = boxRect.width || boxWidth;
+
+    var left = rect.left;
+    if (left + boxWidth > window.innerWidth - margin) left = window.innerWidth - boxWidth - margin;
+    if (left < margin) left = margin;
+
+    var top;
+    if (placeBelow) {
+      top = rect.bottom + gap;
+    } else {
+      top = rect.top - boxHeight - gap;
+    }
+
+    if (top < margin) top = margin;
+    if (top + boxHeight > window.innerHeight - margin) {
+      top = Math.max(margin, window.innerHeight - boxHeight - margin);
+    }
+
+    suggestionsBox.style.left = Math.round(left) + 'px';
+    suggestionsBox.style.top = Math.round(top) + 'px';
+    suggestionsBox.style.visibility = '';
+  }
+
+  function hideSuggestions() {
+    suggestionState.visible = false;
+    suggestionState.items = [];
+    suggestionState.line = null;
+    suggestionState.meta = {};
+    if (suggestionsBox) suggestionsBox.hidden = true;
+  }
+
+  function muteSuggestions(ms) {
+    suggestionMuteUntil = Date.now() + (ms || 300);
+    hideSuggestions();
+  }
+
+  function suggestionsAreMuted() {
+    return Date.now() < suggestionMuteUntil;
+  }
+
+  function refreshSuggestionActive() {
+    Array.from(suggestionsBox.querySelectorAll('.suggestion-item')).forEach(function (button, index) {
+      button.classList.toggle('active', index === suggestionState.active);
+      if (index === suggestionState.active) button.scrollIntoView({ block: 'nearest' });
+    });
+  }
+
+  function moveSuggestion(delta) {
+    if (!suggestionState.visible || !suggestionState.items.length) return;
+    suggestionState.active = (suggestionState.active + delta + suggestionState.items.length) % suggestionState.items.length;
+    refreshSuggestionActive();
+  }
+
+  function applySuggestion(index) {
+    if (!suggestionState.visible) return false;
+    index = typeof index === 'number' ? index : suggestionState.active;
+    var value = suggestionState.items[index];
+    var line = suggestionState.line || getCurrentLine();
+    if (!line || !value) return false;
+
+    var mode = suggestionState.mode;
+    var current = (line.textContent || '').toUpperCase();
+    if (mode === 'prefix' || mode === 'combo-prefix') {
+      setLineType(line, 'scene', false);
+      // Replace only INT./EXT. part. Do not wipe existing LOCATION - TIME.
+      // Example: SCENE 4 INT. HOUSE - NIGHT -> SCENE 4 EXT. HOUSE - NIGHT
+      replaceOnlyScenePrefix(line, value, suggestionState.meta || {});
+      setCaretOffset(line, line.textContent.length);
+    }
+
+    if (mode === 'location' || mode === 'combo-location') {
+      setLineType(line, 'scene', false);
+      var comboTransition2 = (suggestionState.meta && suggestionState.meta.transition) || '';
+      var sceneLabel2 = (suggestionState.meta && suggestionState.meta.sceneLabel) || '';
+      var currentForPrefix = comboTransition2 ? stripLeadingTransition(line.textContent || '') : (line.textContent || '');
+      currentForPrefix = splitSceneNumberPrefix(currentForPrefix).rest || currentForPrefix;
+      var prefixMatch = getPrefixMatch((currentForPrefix || '').toUpperCase().trimStart());
+      var prefix = prefixMatch ? prefixMatch[1] : 'INT.';
+      var sceneText2 = (sceneLabel2 ? sceneLabel2 + ' ' : '') + prefix + ' ' + value + ' - ';
+      line.textContent = (comboTransition2 ? comboTransition2 + ' ' : '') + sceneText2;
+      setCaretOffset(line, line.textContent.length);
+    }
+
+    if (mode === 'time' || mode === 'combo-time') {
+      setLineType(line, 'scene', false);
+      var comboTransition3 = (suggestionState.meta && suggestionState.meta.transition) || '';
+      var sceneLabel3 = (suggestionState.meta && suggestionState.meta.sceneLabel) || '';
+      var text = (comboTransition3 ? stripLeadingTransition(line.textContent || '') : (line.textContent || '')).toUpperCase();
+      var sceneParts3 = splitSceneNumberPrefix(text);
+      if (!sceneLabel3 && sceneParts3.label) sceneLabel3 = sceneParts3.label;
+      text = sceneParts3.rest || text;
+      var match = getPrefixMatch(text.trimStart());
+      var prefixText = match ? match[1] : 'INT.';
+      var afterPrefix = match ? text.trimStart().slice(match[0].length) : text;
+      var location = afterPrefix.split('-')[0].trim() || 'LOCATION';
+      var sceneText3 = (sceneLabel3 ? sceneLabel3 + ' ' : '') + prefixText + ' ' + location + ' - ' + value;
+      line.textContent = (comboTransition3 ? comboTransition3 + ' ' : '') + sceneText3;
+      setCaretOffset(line, line.textContent.length);
+    }
+
+    if (mode === 'character') {
+      setLineType(line, 'character', false);
+      line.textContent = value;
+      setCaretOffset(line, line.textContent.length);
+    }
+
+    if (mode === 'transition') {
+      setLineType(line, 'transition', false);
+      line.textContent = value;
+      setCaretOffset(line, line.textContent.length);
+    }
+
+    muteSuggestions(450);
+    renumberSceneHeadings();
+    updateAll();
+    setCaretAfterSuggestion(line);
+    saveNow(false);
+    if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+    return true;
+  }
+
+  function normalizeCurrentLine(line) {
+    if (!line) return;
+    var oldType = line.dataset.type || 'action';
+    var raw = line.textContent || '';
+    var trimmedUpper = raw.trim().toUpperCase();
+
+    if (oldType === 'action' && (/^(INT|EXT)(\b|\.|\/|\s)/.test(trimmedUpper) || /^SCENE\s+\d+\b/.test(trimmedUpper))) {
+      setLineType(line, 'scene', true);
+      oldType = 'scene';
+    }
+
+    var normalized = normalizeText(oldType, line.textContent || '');
+    if (normalized !== line.textContent) {
+      var oldLength = (line.textContent || '').length;
+      var offset = getCaretOffset(line);
+      var wasEnd = offset >= oldLength;
+      line.textContent = normalized;
+      setCaretOffset(line, wasEnd ? normalized.length : Math.min(offset, normalized.length));
+    }
+  }
+
+  function updateAll() {
+    updateCounts();
+    updateSceneList();
+  }
+
+  function scheduleSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () { saveNow(false); }, 400);
+  }
+
+  function scheduleHistoryPush() {
+    clearTimeout(lastInputPushTimer);
+    lastInputPushTimer = setTimeout(function () {
+      if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+    }, 900);
+  }
+
+  function saveNow(showMessage) {
+    var data = serialize();
+    if (window.ScreenwriterDocs && window.ScreenwriterDocs.saveCurrent) {
+      window.ScreenwriterDocs.saveCurrent(data);
+    } else {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+    }
+    if (showMessage) toast('Saved');
+  }
+
+  function insertLineAfter(line, type, text) {
+    var next = createLine(type, text || '');
+    line.after(next);
+    placeCaretAtEnd(next);
+    focusLine(next);
+    updateAll();
+    return next;
+  }
+
+  function goToNextElement() {
+    var line = getCurrentLine();
+    if (!line) return;
+
+    hideSuggestions();
+    var currentType = line.dataset.type || 'action';
+    var hasText = !!(line.textContent || '').trim();
+
+    if (currentType === 'transition') {
+      if (hasText) normalizeCurrentLine(line);
+      var nextScene = line.nextElementSibling && line.nextElementSibling.classList.contains('line') && line.nextElementSibling.dataset.type === 'scene' ? line.nextElementSibling : null;
+      if (nextScene) {
+        placeCaretAtEnd(nextScene);
+        focusLine(nextScene);
+        hideSuggestions();
+        setTimeout(updateSuggestions, 0);
+        return;
+      }
+      if (hasText) {
+        insertLineAfter(line, 'scene', makeSceneStarter());
+        renumberSceneHeadings();
+        updateAll();
+        saveNow(false);
+        if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+        setTimeout(updateSuggestions, 0);
+        return;
+      }
+    }
+
+    var next = nextShortcutType(currentType);
+
+    if (hasText) {
+      normalizeCurrentLine(line);
+      var nextText = next === 'scene' ? makeSceneStarter() : '';
+      insertLineAfter(line, next, nextText);
+    } else {
+      setLineType(line, next, true);
+      if (next === 'scene' && !(line.textContent || '').trim()) {
+        line.textContent = makeSceneStarter();
+        placeCaretAtEnd(line);
+      } else {
+        placeCaretAtEnd(line);
+      }
+    }
+
+    renumberSceneHeadings();
+    updateAll();
+    saveNow(false);
+    if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+  }
+
+  function handleEnter(event) {
+    event.preventDefault();
+    if (suggestionState.visible) {
+      applySuggestion();
+      return;
+    }
+
+    var line = getCurrentLine();
+    if (!line) return;
+    var text = line.textContent || '';
+    var offset = getCaretOffset(line);
+    var before = text.slice(0, offset);
+    var after = text.slice(offset);
+    var type = line.dataset.type || 'action';
+
+    if (type === 'transition' && !after.trim()) {
+      line.textContent = normalizeText(type, before);
+      var existingScene = line.nextElementSibling && line.nextElementSibling.classList.contains('line') && line.nextElementSibling.dataset.type === 'scene' ? line.nextElementSibling : null;
+      if (existingScene) {
+        hideSuggestions();
+        placeCaretAtEnd(existingScene);
+        focusLine(existingScene);
+        saveNow(false);
+        if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+        setTimeout(updateSuggestions, 0);
+        return;
+      }
+    }
+
+    line.textContent = normalizeText(type, before);
+    var newType = after.trim() ? type : nextType(type);
+    var next = insertLineAfter(line, newType, after.trim() ? after.trimStart() : (newType === 'scene' ? makeSceneStarter() : ''));
+    if (after.trim()) setCaretOffset(next, 0);
+    hideSuggestions();
+    renumberSceneHeadings();
+    saveNow(false);
+    if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+  }
+
+  function handleBackspace(event) {
+    var line = getCurrentLine();
+    if (!line || getCaretOffset(line) !== 0) return;
+    var prev = line.previousElementSibling;
+    if (!prev || !prev.classList.contains('line')) return;
+    event.preventDefault();
+    var prevLength = (prev.textContent || '').length;
+    prev.textContent = (prev.textContent || '') + (line.textContent || '');
+    line.remove();
+    setCaretOffset(prev, prevLength);
+    focusLine(prev);
+    updateAll();
+    saveNow(false);
+    if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+  }
+
+  function cycleType(line) {
+    var current = line.dataset.type || 'action';
+    var index = TYPES.indexOf(current);
+    var next = TYPES[(index + 1) % TYPES.length];
+    setLineType(line, next, true);
+    updateAll();
+  }
+
+  function handleTab(event) {
+    event.preventDefault();
+    if (suggestionState.visible) {
+      applySuggestion();
+      return;
+    }
+    updateSuggestions();
+    if (suggestionState.visible) {
+      applySuggestion();
+      return;
+    }
+    cycleType(getCurrentLine());
+  }
+
+  function handlePaste(event) {
+    var line = getCurrentLine();
+    if (!line) return;
+    event.preventDefault();
+    var text = (event.clipboardData || window.clipboardData).getData('text/plain') || '';
+    var parts = text.replace(/\r/g, '').split('\n');
+    var first = parts.shift();
+    var offset = getCaretOffset(line);
+    var current = line.textContent || '';
+    line.textContent = current.slice(0, offset) + first + current.slice(offset);
+    normalizeCurrentLine(line);
+    var currentLine = line;
+    parts.forEach(function (part) {
+      currentLine = insertLineAfter(currentLine, guessType(part), part);
+    });
+    placeCaretAtEnd(currentLine);
+    updateAll();
+    saveNow(false);
+    if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+  }
+
+  function bindEditor() {
+    editor.addEventListener('focusin', function (event) {
+      var line = event.target.closest && event.target.closest('.line');
+      if (line) {
+        focusLine(line);
+        setTimeout(updateSuggestions, 0);
+      }
+    });
+
+    editor.addEventListener('click', function (event) {
+      var line = event.target.closest && event.target.closest('.line');
+      if (!line || !editor.contains(line)) {
+        hideSuggestions();
+        return;
+      }
+      setTimeout(updateSuggestions, 0);
+    });
+
+    document.addEventListener('pointerdown', function (event) {
+      var target = event.target;
+      if (!target || !target.closest) return;
+      if (target.closest('#suggestions')) return;
+      if (target.closest('.line') && editor.contains(target.closest('.line'))) return;
+      hideSuggestions();
+    });
+    editor.addEventListener('keyup', function (event) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter', 'Tab'].indexOf(event.key) === -1) updateSuggestions();
+    });
+
+    editor.addEventListener('input', function () {
+      var line = getCurrentLine();
+      normalizeCurrentLine(line);
+      updateAll();
+      scheduleSave();
+      scheduleHistoryPush();
+      setTimeout(updateSuggestions, 0);
+    });
+
+    editor.addEventListener('keydown', function (event) {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        goToNextElement();
+        return;
+      }
+      if (event.key === 'Enter') return handleEnter(event);
+      if (event.key === 'Backspace') return handleBackspace(event);
+      if (event.key === 'Tab') return handleTab(event);
+      if (event.key === 'Escape') return hideSuggestions();
+      if (suggestionState.visible && event.key === 'ArrowDown') {
+        event.preventDefault();
+        moveSuggestion(1);
+      }
+      if (suggestionState.visible && event.key === 'ArrowUp') {
+        event.preventDefault();
+        moveSuggestion(-1);
+      }
+    });
+
+    editor.addEventListener('paste', handlePaste);
+  }
+
+  function loadSaved() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  window.ScreenwriterEditor = {
+    init: function () {
+      editor = document.querySelector('#editor');
+      suggestionsBox = document.querySelector('#suggestions');
+      if (!editor) return;
+      deserialize({ title: 'Untitled Script', titlePage: { enabled: false, title: 'Untitled Script' }, lines: defaultStartLines() });
+      bindEditor();
+      if (window.ScreenwriterHistory) window.ScreenwriterHistory.reset(serialize());
+      var first = editor.querySelector('.line');
+      if (first) {
+        placeCaretAtEnd(first);
+        focusLine(first);
+        hideSuggestions();
+      }
+    },
+    serialize: serialize,
+    deserialize: function (data) {
+      deserialize(data);
+      if (window.ScreenwriterHistory) window.ScreenwriterHistory.reset(serialize());
+      saveNow(false);
+    },
+    setCurrentLineType: function (type) {
+      var line = getCurrentLine();
+      if (!line) return;
+      setLineType(line, type, true);
+      if (type === 'scene' && !/^\s*SCENE\s+\d+\b/i.test(line.textContent || '')) {
+        var core = normalizeSceneCore(line.textContent || 'INT. ');
+        line.textContent = 'SCENE ' + getNextSceneNumber() + ' ' + core;
+        placeCaretAtEnd(line);
+      }
+      renumberSceneHeadings();
+      updateAll();
+      saveNow(false);
+      if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+      updateSuggestions();
+    },
+    openTransitionSuggestions: openTransitionSuggestions,
+    goToNextElement: goToNextElement,
+    moveSceneBlock: moveSceneBlock,
+    undo: function () {
+      if (!window.ScreenwriterHistory) return;
+      var state = window.ScreenwriterHistory.undo(serialize());
+      if (!state) return;
+      deserialize(state);
+      saveNow(false);
+      toast('Undo');
+    },
+    redo: function () {
+      if (!window.ScreenwriterHistory) return;
+      var state = window.ScreenwriterHistory.redo(serialize());
+      if (!state) return;
+      deserialize(state);
+      saveNow(false);
+      toast('Redo');
+    },
+    save: function () { saveNow(true); },
+    autosave: function () { saveNow(false); },
+    createBlankData: function (title) {
+      title = title || 'Untitled Script';
+      return { title: title, titlePage: { enabled: false, title: title }, lines: defaultStartLines() };
+    },
+    newScript: function () {
+      if (window.ScreenwriterDocs && window.ScreenwriterDocs.newBlank) {
+        window.ScreenwriterDocs.newBlank();
+        return;
+      }
+      document.querySelector('#scriptTitle').value = 'Untitled Script';
+      if (window.ScreenwriterTitlePage) window.ScreenwriterTitlePage.clear();
+      deserialize({ title: 'Untitled Script', titlePage: { enabled: false, title: 'Untitled Script' }, lines: defaultStartLines() });
+      var line = editor.querySelector('.line');
+      if (line) placeCaretAtEnd(line);
+      if (window.ScreenwriterHistory) window.ScreenwriterHistory.reset(serialize());
+      toast('New script');
+    },
+    getCurrentLine: getCurrentLine,
+    applySuggestion: applySuggestion,
+    hideSuggestions: hideSuggestions,
+    updateSuggestions: updateSuggestions
+  };
+})();
+
+</script>
+  <script>
+(function () {
+  window.ScreenwriterShortcuts = {
+    init: function () {
+      document.addEventListener('keydown', function (event) {
+        var key = event.key.toLowerCase();
+        var command = event.ctrlKey || event.metaKey;
+
+        if (command && key === 'enter') {
+          event.preventDefault();
+          if (window.ScreenwriterEditor && window.ScreenwriterEditor.goToNextElement) {
+            window.ScreenwriterEditor.goToNextElement();
+          }
+          return;
+        }
+
+        if (!command) return;
+
+        if (key === 's') {
+          event.preventDefault();
+          if (window.ScreenwriterEditor) window.ScreenwriterEditor.save();
+          return;
+        }
+        if (key === '1') {
+          event.preventDefault();
+          if (window.ScreenwriterEditor) window.ScreenwriterEditor.setCurrentLineType('scene');
+          return;
+        }
+        if (key === '2') {
+          event.preventDefault();
+          if (window.ScreenwriterEditor) window.ScreenwriterEditor.setCurrentLineType('action');
+          return;
+        }
+        if (key === '3') {
+          event.preventDefault();
+          if (window.ScreenwriterEditor) window.ScreenwriterEditor.setCurrentLineType('character');
+          return;
+        }
+        if (key === '4' || key === 't') {
+          event.preventDefault();
+          if (window.ScreenwriterEditor) {
+            window.ScreenwriterEditor.setCurrentLineType('transition');
+            if (window.ScreenwriterEditor.openTransitionSuggestions) {
+              window.ScreenwriterEditor.openTransitionSuggestions();
+            }
+          }
+          return;
+        }
+        if (key === 'y' || (event.shiftKey && key === 'z')) {
+          event.preventDefault();
+          if (window.ScreenwriterEditor) window.ScreenwriterEditor.redo();
+          return;
+        }
+        if (key === 'z') {
+          event.preventDefault();
+          if (window.ScreenwriterEditor) window.ScreenwriterEditor.undo();
+        }
+      });
+    }
+  };
+})();
+
+</script>
+  <script>
+(function () {
+  var INDEX_KEY = 'screenwriter_docs_index_v1';
+  var DOC_PREFIX = 'screenwriter_doc_v1_';
+  var currentDocId = null;
+  var suppressSave = false;
+
+  function $(selector) { return document.querySelector(selector); }
+
+  function uid() {
+    return 'doc_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+  }
+
+  function now() { return Date.now(); }
+
+  function safeParse(raw, fallback) {
+    try { return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; }
+  }
+
+  function getIndex() {
+    var list = safeParse(localStorage.getItem(INDEX_KEY), []);
+    return Array.isArray(list) ? list : [];
+  }
+
+  function setIndex(list) {
+    localStorage.setItem(INDEX_KEY, JSON.stringify(list));
+  }
+
+  function docKey(id) { return DOC_PREFIX + id; }
+
+  function readDoc(id) {
+    return safeParse(localStorage.getItem(docKey(id)), null);
+  }
+
+  function writeDoc(id, data) {
+    localStorage.setItem(docKey(id), JSON.stringify(data));
+  }
+
+  function removeDoc(id) {
+    localStorage.removeItem(docKey(id));
+    setIndex(getIndex().filter(function (item) { return item.id !== id; }));
+    if (currentDocId === id) currentDocId = null;
+    renderRecents();
+  }
+
+  function cleanTitle(title) {
+    title = (title || '').trim();
+    return title || 'Untitled Script';
+  }
+
+  function getPreview(data) {
+    if (!data || !Array.isArray(data.lines)) return '';
+    var text = data.lines.map(function (line) { return (line.text || '').trim(); }).filter(Boolean).slice(0, 3).join('  ');
+    return text || 'Blank screenplay';
+  }
+
+  function wordCount(data) {
+    if (!data || !Array.isArray(data.lines)) return 0;
+    var text = data.lines.map(function (line) { return line.text || ''; }).join(' ').trim();
+    return text ? text.split(/\s+/).length : 0;
+  }
+
+  function fmtDate(ms) {
+    if (!ms) return '';
+    var d = new Date(ms);
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function upsertIndex(id, data, createdAt) {
+    var list = getIndex().filter(function (item) { return item.id !== id; });
+    var meta = {
+      id: id,
+      title: cleanTitle(data && data.title),
+      updatedAt: now(),
+      createdAt: createdAt || now(),
+      preview: getPreview(data),
+      words: wordCount(data)
+    };
+    list.unshift(meta);
+    setIndex(list.slice(0, 30));
+    return meta;
+  }
+
+  function showHome() {
+    var home = $('#homeScreen');
+    var app = $('#appShell');
+    if (home) home.hidden = false;
+    if (app) app.hidden = true;
+    currentDocId = null;
+    renderRecents();
+  }
+
+  function showEditor() {
+    var home = $('#homeScreen');
+    var app = $('#appShell');
+    if (home) home.hidden = true;
+    if (app) app.hidden = false;
+    setTimeout(function () {
+      var line = document.querySelector('#editor .line');
+      if (line) {
+        line.focus();
+        var range = document.createRange();
+        range.selectNodeContents(line);
+        range.collapse(false);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    }, 0);
+  }
+
+  function blankData() {
+    if (window.ScreenwriterEditor && window.ScreenwriterEditor.createBlankData) {
+      return window.ScreenwriterEditor.createBlankData('Untitled Script');
+    }
+    return {
+      title: 'Untitled Script',
+      titlePage: { enabled: false, title: 'Untitled Script' },
+      lines: [
+        { type: 'transition', text: '' },
+        { type: 'scene', text: 'SCENE 1 ' }
+      ]
+    };
+  }
+
+  function openDataAsNew(data) {
+    var id = uid();
+    currentDocId = id;
+    data = normalizeImportedData(data);
+    writeDoc(id, data);
+    upsertIndex(id, data, now());
+    showEditor();
+    suppressSave = true;
+    window.ScreenwriterEditor.deserialize(data);
+    suppressSave = false;
+    saveCurrent(window.ScreenwriterEditor.serialize());
+  }
+
+  function newBlank() {
+    openDataAsNew(blankData());
+    if (window.ScreenwriterEditor && window.ScreenwriterEditor.toast) {
+      window.ScreenwriterEditor.toast('Blank screenplay opened');
+    }
+  }
+
+  function openExisting(id) {
+    var data = readDoc(id);
+    if (!data) {
+      removeDoc(id);
+      alert('This recent file is missing. It was removed from recents.');
+      return;
+    }
+    currentDocId = id;
+    showEditor();
+    suppressSave = true;
+    window.ScreenwriterEditor.deserialize(data);
+    suppressSave = false;
+    saveCurrent(window.ScreenwriterEditor.serialize());
+  }
+
+  function saveCurrent(data) {
+    if (suppressSave || !currentDocId || !data) return;
+    var existing = readDoc(currentDocId);
+    var createdAt = existing && existing.createdAt ? existing.createdAt : now();
+    data.createdAt = createdAt;
+    data.updatedAt = now();
+    data.title = cleanTitle(data.title);
+    writeDoc(currentDocId, data);
+    upsertIndex(currentDocId, data, createdAt);
+    if (!$('#homeScreen') || !$('#homeScreen').hidden) renderRecents();
+  }
+
+  function escapeHtml(text) {
+    return (text || '').replace(/[&<>"]/g, function (ch) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch];
+    });
+  }
+
+  function renderRecents() {
+    var box = $('#recentDocs');
+    if (!box) return;
+    var list = getIndex();
+    if (!list.length) {
+      box.className = 'recent-grid empty';
+      box.textContent = 'No recent documents yet.';
+      return;
+    }
+    box.className = 'recent-grid';
+    box.innerHTML = list.map(function (doc) {
+      return '<article class="recent-card" data-doc-id="' + escapeHtml(doc.id) + '">' +
+        '<button class="recent-open" type="button" data-open-doc="' + escapeHtml(doc.id) + '">' +
+          '<div class="recent-page"><div class="recent-preview">' + escapeHtml(doc.preview || 'Blank screenplay') + '</div></div>' +
+          '<strong>' + escapeHtml(doc.title || 'Untitled Script') + '</strong>' +
+          '<span>' + escapeHtml(fmtDate(doc.updatedAt)) + ' · ' + (doc.words || 0) + ' words</span>' +
+        '</button>' +
+        '<button class="recent-delete" type="button" data-delete-doc="' + escapeHtml(doc.id) + '" title="Remove">⋮</button>' +
+      '</article>';
+    }).join('');
+  }
+
+  function guessTypeFromText(text, prevType) {
+    var t = (text || '').trim();
+    var upper = t.toUpperCase();
+    if (!t) return 'action';
+    if (/^(SCENE\s+\d+\s+)?(INT\.|EXT\.|INT\.\/EXT\.|EXT\.\/INT\.)/.test(upper)) return 'scene';
+    if (/^(CUT TO:|FADE IN:|FADE OUT:|FADE TO BLACK\.|DISSOLVE TO:|SMASH CUT TO:|MATCH CUT TO:|JUMP CUT TO:|HARD CUT TO:|WIPE TO:|BACK TO:|INTERCUT WITH:|SUPER:|TITLE CARD:|END CREDITS)$/.test(upper)) return 'transition';
+    if (/^\(.+\)$/.test(t)) return 'parenthetical';
+    if (prevType === 'character' || prevType === 'parenthetical') return 'dialogue';
+    if (upper === t && t.length <= 34 && /[A-Z]/.test(t) && !/[.!?]$/.test(t)) return 'character';
+    return 'action';
+  }
+
+  function parseTextFile(text, title) {
+    var rawLines = (text || '').replace(/\r/g, '').split('\n');
+    var lines = [];
+    var prev = '';
+    rawLines.forEach(function (raw) {
+      var value = raw.replace(/\s+$/g, '');
+      if (!value.trim()) return;
+      var type = guessTypeFromText(value, prev);
+      lines.push({ type: type, text: value.trim() });
+      prev = type;
+    });
+    if (!lines.length) lines = blankData().lines;
+    return {
+      title: cleanTitle(title),
+      titlePage: { enabled: false, title: cleanTitle(title) },
+      lines: lines
+    };
+  }
+
+  function normalizeImportedData(input) {
+    var data = input && input.data ? input.data : input;
+    if (!data || !Array.isArray(data.lines)) return blankData();
+    return {
+      title: cleanTitle(data.title),
+      titlePage: data.titlePage || { enabled: false, title: cleanTitle(data.title) },
+      lines: data.lines.map(function (line) {
+        return { type: line.type || guessTypeFromText(line.text || ''), text: line.text || '' };
+      })
+    };
+  }
+
+  function importFile(file) {
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var text = String(reader.result || '');
+      var name = file.name.replace(/\.[^.]+$/, '') || 'Imported Script';
+      var lower = file.name.toLowerCase();
+      var data;
+      if (lower.endsWith('.swscript') || lower.endsWith('.json')) {
+        var parsed = safeParse(text, null);
+        data = parsed ? normalizeImportedData(parsed) : parseTextFile(text, name);
+        data.title = cleanTitle(data.title === 'Untitled Script' ? name : data.title);
+      } else {
+        data = parseTextFile(text, name);
+      }
+      openDataAsNew(data);
+      if (window.ScreenwriterEditor && window.ScreenwriterEditor.toast) window.ScreenwriterEditor.toast('Imported');
+    };
+    reader.readAsText(file);
+  }
+
+  function bind() {
+    var blank = $('#homeBlankBtn');
+    var importBtn = $('#homeImportBtn');
+    var input = $('#importFileInput');
+    var homeBtn = $('#homeBtn');
+    var sidebarHomeBtn = $('#sidebarHomeBtn');
+    var clearBtn = $('#clearRecentsBtn');
+
+    if (blank) blank.addEventListener('click', newBlank);
+    if (importBtn && input) importBtn.addEventListener('click', function () { input.value = ''; input.click(); });
+    if (input) input.addEventListener('change', function () { importFile(input.files && input.files[0]); });
+    function goHomeFromEditor() {
+      if (window.ScreenwriterEditor) window.ScreenwriterEditor.autosave();
+      showHome();
+    }
+    if (homeBtn) homeBtn.addEventListener('click', goHomeFromEditor);
+    if (sidebarHomeBtn) sidebarHomeBtn.addEventListener('click', goHomeFromEditor);
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+      if (!confirm('Clear recent documents from this browser?')) return;
+      getIndex().forEach(function (doc) { localStorage.removeItem(docKey(doc.id)); });
+      setIndex([]);
+      renderRecents();
+    });
+
+    document.addEventListener('click', function (event) {
+      var open = event.target.closest && event.target.closest('[data-open-doc]');
+      if (open) {
+        openExisting(open.getAttribute('data-open-doc'));
+        return;
+      }
+      var del = event.target.closest && event.target.closest('[data-delete-doc]');
+      if (del) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (confirm('Remove this document from recents?')) removeDoc(del.getAttribute('data-delete-doc'));
+      }
+    });
+  }
+
+  window.ScreenwriterDocs = {
+    init: function () {
+      bind();
+      showHome();
+    },
+    showHome: showHome,
+    newBlank: newBlank,
+    saveCurrent: saveCurrent,
+    importFile: importFile,
+    currentId: function () { return currentDocId; }
+  };
+})();
+
+</script>
+  <script>
+(function () {
+  function boot() {
+    if (window.ScreenwriterDropdown) window.ScreenwriterDropdown.init();
+    if (window.ScreenwriterToolbar) window.ScreenwriterToolbar.init();
+    if (window.ScreenwriterTitlePage) window.ScreenwriterTitlePage.init();
+    if (window.ScreenwriterExport) window.ScreenwriterExport.init();
+    if (window.ScreenwriterEditor) window.ScreenwriterEditor.init();
+    if (window.ScreenwriterShortcuts) window.ScreenwriterShortcuts.init();
+    if (window.ScreenwriterDocs) window.ScreenwriterDocs.init();
+
+    var newBtn = document.querySelector('#newScriptBtn');
+    if (newBtn) {
+      newBtn.addEventListener('click', function () {
+        if (window.ScreenwriterEditor) window.ScreenwriterEditor.autosave();
+        if (window.ScreenwriterDocs) window.ScreenwriterDocs.newBlank();
+        else if (window.ScreenwriterEditor) window.ScreenwriterEditor.newScript();
+      });
+    }
+
+    var title = document.querySelector('#scriptTitle');
+    if (title) {
+      title.addEventListener('input', function () {
+        if (window.ScreenwriterEditor) window.ScreenwriterEditor.autosave();
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+
+</script>
+</body>
+</html>
