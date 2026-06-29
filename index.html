@@ -6,16 +6,23 @@
   <title>Screenwriter</title>
   <style>
 :root {
-  --bg: #f5f1e9;
-  --sidebar: #151515;
-  --sidebar-soft: #202020;
-  --ink: #1e1e1e;
-  --muted: #707070;
-  --line: #e6ded0;
-  --paper: #fffdf8;
-  --accent: #6b4eff;
-  --accent-dark: #5239d8;
-  --shadow: 0 18px 50px rgba(35, 27, 12, 0.14);
+  --bg: #f3f7fc;
+  --sidebar: #f7faff;
+  --sidebar-soft: #ffffff;
+  --ink: #061a2e;
+  --muted: #5a6e86;
+  --line: #d7e3f2;
+  --paper: #ffffff;
+  --accent: #023e8a;
+  --accent-dark: #012f69;
+  --accent-soft: #edf5ff;
+  --accent-line: #c8d9ef;
+  --shadow: 0 18px 50px rgba(2, 62, 138, 0.12);
+  --sidebar-ink: #061a2e;
+  --sidebar-muted: #5a6e86;
+  --sidebar-border: #c8d9ef;
+  --sidebar-item: #ffffff;
+  --sidebar-item-hover: #edf5ff;
 }
 
 * { box-sizing: border-box; }
@@ -40,7 +47,9 @@ button { cursor: pointer; }
 
 .sidebar {
   background: var(--sidebar);
-  color: white;
+  color: var(--sidebar-ink);
+  border-right: 1px solid var(--sidebar-border);
+  box-shadow: 10px 0 35px rgba(31, 67, 52, 0.05);
   padding: 22px;
   display: flex;
   flex-direction: column;
@@ -63,8 +72,8 @@ button { cursor: pointer; }
   border-radius: 13px;
   display: grid;
   place-items: center;
-  background: white;
-  color: var(--ink);
+  background: var(--accent);
+  color: white;
   font-weight: 800;
   letter-spacing: -0.06em;
 }
@@ -77,29 +86,29 @@ button { cursor: pointer; }
 
 .brand p {
   margin: 3px 0 0;
-  color: #bdbdbd;
+  color: var(--sidebar-muted);
   font-size: 12px;
 }
 
 
 .home-return-btn {
   width: 100%;
-  border: 1px solid rgba(255,255,255,0.18);
+  border: 1px solid var(--sidebar-border);
   border-radius: 12px;
   padding: 11px 14px;
-  background: rgba(255,255,255,0.08);
-  color: white;
+  background: white;
+  color: var(--sidebar-ink);
   font-weight: 800;
   text-align: left;
 }
 
 .home-return-btn:hover {
-  background: rgba(255,255,255,0.14);
+  background: #edf5ff;
 }
 
 .home-top-btn {
   font-weight: 800;
-  border-color: #c9bba9;
+  border-color: var(--sidebar-border);
 }
 
 .primary-btn {
@@ -111,17 +120,17 @@ button { cursor: pointer; }
   font-weight: 700;
 }
 
-.primary-btn:hover { background: var(--accent-dark); }
+.primary-btn:hover { background: #012f69; }
 
 .panel {
   background: var(--sidebar-soft);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid var(--sidebar-border);
   border-radius: 16px;
   padding: 14px;
 }
 
 .panel-title {
-  color: #d8d8d8;
+  color: var(--sidebar-muted);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: .08em;
@@ -131,21 +140,21 @@ button { cursor: pointer; }
 
 .title-input {
   width: 100%;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: #101010;
-  color: white;
+  border: 1px solid var(--sidebar-border);
+  background: white;
+  color: var(--sidebar-ink);
   border-radius: 10px;
   padding: 10px;
   outline: none;
 }
 
-.title-input:focus { border-color: rgba(255,255,255,0.34); }
+.title-input:focus { border-color: var(--accent); }
 
 .meta-row {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  color: #b9b9b9;
+  color: var(--sidebar-muted);
   font-size: 12px;
   margin-top: 12px;
 }
@@ -159,7 +168,7 @@ button { cursor: pointer; }
 }
 
 .scene-list.empty {
-  color: #9c9c9c;
+  color: var(--sidebar-muted);
   font-size: 13px;
 }
 
@@ -169,23 +178,23 @@ button { cursor: pointer; }
   grid-template-columns: 18px 1fr auto;
   align-items: center;
   gap: 7px;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid var(--sidebar-border);
   text-align: left;
   padding: 7px 8px;
   border-radius: 10px;
-  background: #111;
-  color: #efefef;
+  background: var(--sidebar-item);
+  color: var(--sidebar-ink);
   font-size: 12px;
   line-height: 1.35;
 }
 
-.scene-item:hover { background: #303030; }
+.scene-item:hover { background: var(--sidebar-item-hover); }
 .scene-item.dragging { opacity: .55; }
 .scene-item.drop-before { box-shadow: 0 -3px 0 var(--accent); }
 .scene-item.drop-after { box-shadow: 0 3px 0 var(--accent); }
 
 .scene-drag-handle {
-  color: #999;
+  color: #5a6e86;
   cursor: grab;
   user-select: none;
   font-size: 13px;
@@ -197,7 +206,7 @@ button { cursor: pointer; }
 .scene-jump {
   border: 0;
   background: transparent;
-  color: #efefef;
+  color: var(--sidebar-ink);
   text-align: left;
   padding: 3px 0;
   font-size: 12px;
@@ -209,7 +218,7 @@ button { cursor: pointer; }
   -webkit-box-orient: vertical;
 }
 
-.scene-jump:hover { color: white; }
+.scene-jump:hover { color: var(--accent); }
 
 .scene-actions {
   display: flex;
@@ -219,10 +228,10 @@ button { cursor: pointer; }
 .scene-actions button {
   width: 22px;
   height: 22px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid var(--sidebar-border);
   border-radius: 7px;
-  background: #1e1e1e;
-  color: #ddd;
+  background: white;
+  color: var(--sidebar-ink);
   font-size: 12px;
   padding: 0;
 }
@@ -239,17 +248,17 @@ button { cursor: pointer; }
 
 .compact-help p {
   margin: 7px 0;
-  color: #bfbfbf;
+  color: var(--sidebar-muted);
   font-size: 12px;
 }
 
 kbd {
-  background: #0f0f0f;
-  border: 1px solid #454545;
-  border-bottom-color: #222;
+  background: white;
+  border: 1px solid var(--sidebar-border);
+  border-bottom-color: #b8cce4;
   padding: 1px 5px;
   border-radius: 5px;
-  color: white;
+  color: var(--sidebar-ink);
   font-size: 11px;
 }
 
@@ -283,18 +292,23 @@ kbd {
 .toolbar-spacer { flex: 1; }
 
 .tool-btn {
-  border: 1px solid #ded4c6;
-  background: white;
-  color: #242424;
+  border: 1px solid #c8d9ef;
+  background: #ffffff;
+  color: #023e8a;
   border-radius: 10px;
   padding: 9px 11px;
   font-size: 13px;
 }
 
-.tool-btn:hover,
+.tool-btn:hover {
+  border-color: #023e8a;
+  background: #edf5ff;
+}
+
 .tool-btn.active {
-  border-color: #bcb1a1;
-  background: #f5efe6;
+  border-color: #023e8a;
+  background: #023e8a;
+  color: #ffffff;
 }
 
 .dropdown-menu {
@@ -303,7 +317,7 @@ kbd {
   left: 0;
   min-width: 190px;
   background: white;
-  border: 1px solid #dfd6c9;
+  border: 1px solid #c8d9ef;
   border-radius: 14px;
   box-shadow: var(--shadow);
   padding: 8px;
@@ -321,10 +335,10 @@ kbd {
   text-align: left;
   border-radius: 9px;
   padding: 9px 10px;
-  color: #222;
+  color: #023e8a;
 }
 
-.dropdown-menu button:hover { background: #f3eee7; }
+.dropdown-menu button:hover { background: #edf5ff; color: #023e8a; }
 
 .editor-wrap {
   position: relative;
@@ -365,6 +379,51 @@ kbd {
 
 .line + .line { margin-top: 7px; }
 .line.scene { text-transform: uppercase; margin-top: 18px; font-weight: 700; }
+.line.scene.slug-boxed {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45ch;
+  flex-wrap: wrap;
+  background: transparent;
+  box-shadow: none;
+  padding: 1px 2px;
+}
+.slug-box {
+  display: inline-block;
+  min-width: 1ch;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  text-transform: uppercase;
+  white-space: pre;
+}
+.slug-box.scene-number {
+  user-select: none;
+  cursor: default;
+}
+.slug-box.prefix { min-width: 4ch; }
+.slug-box.location { min-width: 8ch; }
+.slug-box.time { min-width: 3ch; }
+.slug-box:focus {
+  outline: none;
+}
+.slug-box:empty::before {
+  content: attr(data-placeholder);
+  color: #9aa9ba;
+  font-weight: 400;
+}
+.slug-dash {
+  user-select: none;
+}
+.line.scene.slug-boxed.active-line {
+  background: rgba(2, 62, 138, 0.08);
+  box-shadow: 0 0 0 1px rgba(2, 62, 138, 0.18) inset;
+}
 .line:first-child { margin-top: 0; }
 .line.transition + .line.scene { margin-top: 7px; }
 .line.action { margin-left: 0; }
@@ -375,13 +434,13 @@ kbd {
 .line.shot { text-transform: uppercase; margin-top: 14px; }
 
 .line.active-line {
-  background: rgba(107, 78, 255, 0.06);
-  box-shadow: 0 0 0 1px rgba(107, 78, 255, 0.10) inset;
+  background: rgba(2, 62, 138, 0.08);
+  box-shadow: 0 0 0 1px rgba(2, 62, 138, 0.18) inset;
 }
 
 .line:empty::before {
   content: attr(data-placeholder);
-  color: #b5aea5;
+  color: #9aa9ba;
   pointer-events: none;
 }
 
@@ -392,20 +451,20 @@ kbd {
   max-height: 260px;
   overflow: auto;
   z-index: 100;
-  background: #151515;
-  color: white;
-  border: 1px solid rgba(255,255,255,0.12);
-  box-shadow: 0 14px 34px rgba(0,0,0,0.24);
-  border-radius: 10px;
-  padding: 5px;
+  background: #ffffff;
+  color: #023e8a;
+  border: 1px solid #c8d9ef;
+  box-shadow: 0 10px 24px rgba(2,62,138,0.16);
+  border-radius: 4px;
+  padding: 2px;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .suggestions::-webkit-scrollbar { width: 7px; }
-.suggestions::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.28); border-radius: 999px; }
+.suggestions::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.22); border-radius: 999px; }
 
 .suggestion-title {
-  color: #a7a7a7;
+  color: #5a6e86;
   font-size: 11px;
   padding: 6px 9px 5px;
   text-transform: uppercase;
@@ -418,16 +477,24 @@ kbd {
   width: 100%;
   text-align: left;
   background: transparent;
-  color: white;
-  padding: 7px 9px;
-  border-radius: 7px;
+  color: #023e8a;
+  padding: 6px 9px;
+  border-radius: 2px;
   font-size: 13px;
   font-family: "Courier New", Courier, monospace;
 }
 
 .suggestion-item:hover,
 .suggestion-item.active {
-  background: var(--accent);
+  background: #023e8a;
+  color: #ffffff;
+}
+
+.shortcut-hint {
+  float: right;
+  margin-left: 28px;
+  color: #5a6e86;
+  font-size: 12px;
 }
 
 
@@ -445,8 +512,8 @@ kbd {
 
 .modal-card {
   width: min(100%, 560px);
-  background: #fffdf8;
-  border: 1px solid #ded4c6;
+  background: #ffffff;
+  border: 1px solid #c8d9ef;
   border-radius: 18px;
   box-shadow: var(--shadow);
   padding: 20px;
@@ -474,10 +541,10 @@ kbd {
 .icon-btn {
   width: 34px;
   height: 34px;
-  border: 1px solid #ded4c6;
+  border: 1px solid #c8d9ef;
   border-radius: 10px;
   background: white;
-  color: #222;
+  color: #023e8a;
   font-size: 22px;
   line-height: 1;
 }
@@ -486,10 +553,10 @@ kbd {
   display: flex;
   align-items: center;
   gap: 10px;
-  border: 1px solid #eadfce;
+  border: 1px solid #c8d9ef;
   border-radius: 12px;
   padding: 12px;
-  background: #fff8ed;
+  background: #f3f7fc;
   font-weight: 700;
   margin-bottom: 14px;
 }
@@ -506,7 +573,7 @@ kbd {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #333;
+  color: #023e8a;
   font-size: 13px;
   font-weight: 700;
 }
@@ -520,7 +587,7 @@ kbd {
 }
 
 .form-grid input {
-  border: 1px solid #ded4c6;
+  border: 1px solid #c8d9ef;
   border-radius: 10px;
   background: white;
   color: #111;
@@ -528,7 +595,7 @@ kbd {
   outline: none;
 }
 
-.form-grid input:focus { border-color: #a99bdc; box-shadow: 0 0 0 3px rgba(107,78,255,.11); }
+.form-grid input:focus { border-color: #023e8a; box-shadow: 0 0 0 3px rgba(2,62,138,.10); }
 
 .modal-actions {
   display: flex;
@@ -590,8 +657,8 @@ kbd {
 
 .modal-card {
   width: min(100%, 560px);
-  background: #fffdf8;
-  border: 1px solid #ded4c6;
+  background: #ffffff;
+  border: 1px solid #c8d9ef;
   border-radius: 18px;
   box-shadow: var(--shadow);
   padding: 20px;
@@ -619,10 +686,10 @@ kbd {
 .icon-btn {
   width: 34px;
   height: 34px;
-  border: 1px solid #ded4c6;
+  border: 1px solid #c8d9ef;
   border-radius: 10px;
   background: white;
-  color: #222;
+  color: #023e8a;
   font-size: 22px;
   line-height: 1;
 }
@@ -631,10 +698,10 @@ kbd {
   display: flex;
   align-items: center;
   gap: 10px;
-  border: 1px solid #eadfce;
+  border: 1px solid #c8d9ef;
   border-radius: 12px;
   padding: 12px;
-  background: #fff8ed;
+  background: #f3f7fc;
   font-weight: 700;
   margin-bottom: 14px;
 }
@@ -651,7 +718,7 @@ kbd {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: #333;
+  color: #023e8a;
   font-size: 13px;
   font-weight: 700;
 }
@@ -665,7 +732,7 @@ kbd {
 }
 
 .form-grid input {
-  border: 1px solid #ded4c6;
+  border: 1px solid #c8d9ef;
   border-radius: 10px;
   background: white;
   color: #111;
@@ -673,7 +740,7 @@ kbd {
   outline: none;
 }
 
-.form-grid input:focus { border-color: #a99bdc; box-shadow: 0 0 0 3px rgba(107,78,255,.11); }
+.form-grid input:focus { border-color: #023e8a; box-shadow: 0 0 0 3px rgba(2,62,138,.10); }
 
 .modal-actions {
   display: flex;
@@ -696,8 +763,8 @@ kbd {
 /* Home / documents screen */
 .home-screen {
   min-height: 100vh;
-  background: #f3f6fb;
-  color: #1f2937;
+  background: #f3f7fc;
+  color: #023e8a;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -707,7 +774,7 @@ kbd {
   align-items: center;
   padding: 0 38px;
   background: white;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #d7e3f2;
 }
 
 .home-brand {
@@ -722,7 +789,7 @@ kbd {
   border-radius: 10px;
   display: grid;
   place-items: center;
-  background: #111827;
+  background: #023e8a;
   color: white;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -737,7 +804,7 @@ kbd {
 .home-brand p {
   margin: 3px 0 0;
   font-size: 13px;
-  color: #6b7280;
+  color: #5a6e86;
 }
 
 .home-main {
@@ -748,7 +815,7 @@ kbd {
 
 .template-section {
   padding-bottom: 32px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #d7e3f2;
 }
 
 .section-head {
@@ -773,7 +840,7 @@ kbd {
 }
 
 .template-card {
-  border: 1px solid #d1d5db;
+  border: 1px solid #c8d9ef;
   background: white;
   border-radius: 4px;
   height: 230px;
@@ -784,13 +851,13 @@ kbd {
   justify-content: center;
   align-items: center;
   gap: 12px;
-  color: #111827;
+  color: #023e8a;
   box-shadow: 0 1px 1px rgba(0,0,0,.04);
 }
 
 .template-card:hover {
-  border-color: #4b83f1;
-  box-shadow: 0 4px 18px rgba(37, 99, 235, .16);
+  border-color: #023e8a;
+  box-shadow: 0 4px 18px rgba(2, 62, 138, .12);
 }
 
 .template-card strong {
@@ -803,7 +870,7 @@ kbd {
 .template-card span {
   align-self: stretch;
   text-align: left;
-  color: #6b7280;
+  color: #5a6e86;
   font-size: 12px;
 }
 
@@ -813,7 +880,7 @@ kbd {
   height: 76px;
   display: grid;
   place-items: center;
-  color: #4285f4;
+  color: #023e8a;
   font-size: 72px;
   font-weight: 300;
   line-height: 1;
@@ -825,8 +892,9 @@ kbd {
   height: 76px;
   display: grid;
   place-items: center;
-  color: #16a34a;
-  border: 2px dashed #86efac;
+  color: #023e8a;
+  border: 2px dashed #8db1dc;
+  background: #f3f7fc;
   border-radius: 20px;
   font-size: 42px;
   line-height: 1;
@@ -837,16 +905,16 @@ kbd {
 }
 
 .ghost-btn {
-  border: 1px solid #d1d5db;
+  border: 1px solid #c8d9ef;
   background: white;
-  color: #374151;
+  color: #023e8a;
   border-radius: 999px;
   padding: 8px 12px;
   font-size: 13px;
 }
 
 .ghost-btn:hover {
-  background: #f9fafb;
+  background: #edf5ff;
 }
 
 .recent-grid {
@@ -857,7 +925,7 @@ kbd {
 
 .recent-grid.empty {
   display: block;
-  color: #6b7280;
+  color: #5a6e86;
   padding: 26px 0;
 }
 
@@ -871,13 +939,13 @@ kbd {
   background: transparent;
   padding: 0;
   text-align: left;
-  color: #111827;
+  color: #023e8a;
 }
 
 .recent-page {
   height: 250px;
-  border: 1px solid #d1d5db;
-  background: #fffdf8;
+  border: 1px solid #c8d9ef;
+  background: #ffffff;
   border-radius: 4px;
   overflow: hidden;
   padding: 22px;
@@ -889,8 +957,8 @@ kbd {
 }
 
 .recent-card:hover .recent-page {
-  border-color: #4b83f1;
-  box-shadow: 0 5px 18px rgba(37,99,235,.13);
+  border-color: #023e8a;
+  box-shadow: 0 5px 18px rgba(2,62,138,.12);
 }
 
 .recent-preview {
@@ -913,7 +981,7 @@ kbd {
 .recent-open span {
   display: block;
   margin-left: 4px;
-  color: #6b7280;
+  color: #5a6e86;
   font-size: 13px;
 }
 
@@ -926,13 +994,13 @@ kbd {
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: #6b7280;
+  color: #5a6e86;
   font-size: 22px;
 }
 
 .recent-delete:hover {
-  background: #e5e7eb;
-  color: #111827;
+  background: #d7e3f2;
+  color: #023e8a;
 }
 
 @media (max-width: 780px) {
@@ -1018,11 +1086,17 @@ kbd {
 
       <section class="panel compact-help">
         <div class="panel-title">Fast keys</div>
-        <p><kbd>Tab</kbd> accept suggestion</p>
-        <p><kbd>↑</kbd>/<kbd>↓</kbd> move suggestions</p>
-        <p><kbd>Esc</kbd> hide suggestions</p>
         <p><kbd>Enter</kbd> next screenplay line</p>
         <p><kbd>Ctrl</kbd> + <kbd>Enter</kbd> next element</p>
+        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> Scene</p>
+        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>2</kbd> Action</p>
+        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>3</kbd> Character</p>
+        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>4</kbd> Parenthetical</p>
+        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>5</kbd> Dialogue</p>
+        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>6</kbd> Transition</p>
+        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>7</kbd> Shot</p>
+        <p><kbd>↑</kbd>/<kbd>↓</kbd> move suggestions</p>
+        <p><kbd>Esc</kbd> hide suggestions</p>
         <p>Drag scenes in sidebar to reorder</p>
         <p>Transition can sit before Scene 1</p>
         <p>Scene number + slugline same line</p>
@@ -1048,13 +1122,13 @@ kbd {
             <span class="chevron">▾</span>
           </button>
           <div class="dropdown-menu">
-            <button data-type="scene" type="button">Scene Heading</button>
-            <button data-type="action" type="button">Action</button>
-            <button data-type="character" type="button">Character</button>
-            <button data-type="parenthetical" type="button">Parenthetical</button>
-            <button data-type="dialogue" type="button">Dialogue</button>
-            <button data-type="transition" type="button">Transition</button>
-            <button data-type="shot" type="button">Shot</button>
+            <button data-type="scene" type="button">Scene Heading <span class="shortcut-hint">Ctrl+Shift+1</span></button>
+            <button data-type="action" type="button">Action <span class="shortcut-hint">Ctrl+Shift+2</span></button>
+            <button data-type="character" type="button">Character <span class="shortcut-hint">Ctrl+Shift+3</span></button>
+            <button data-type="parenthetical" type="button">Parenthetical <span class="shortcut-hint">Ctrl+Shift+4</span></button>
+            <button data-type="dialogue" type="button">Dialogue <span class="shortcut-hint">Ctrl+Shift+5</span></button>
+            <button data-type="transition" type="button">Transition <span class="shortcut-hint">Ctrl+Shift+6</span></button>
+            <button data-type="shot" type="button">Shot <span class="shortcut-hint">Ctrl+Shift+7</span></button>
           </div>
         </div>
 
@@ -1858,9 +1932,16 @@ kbd {
   function renumberSceneHeadings() {
     var n = 1;
     editor.querySelectorAll('.line.scene').forEach(function (line) {
+      if (line.classList && line.classList.contains('slug-boxed')) {
+        var sceneBox = getSlugBox(line, 'scene');
+        if (sceneBox) sceneBox.textContent = 'SCENE ' + n;
+        normalizeSlugBoxes(line);
+        n += 1;
+        return;
+      }
+
       var text = normalizeSpaces(line.textContent || '').trimStart();
       if (!text) {
-        line.textContent = 'SCENE ' + n + ' ';
         n += 1;
         return;
       }
@@ -1869,6 +1950,7 @@ kbd {
       } else if (/^(INT\.|EXT\.|INT\.\/EXT\.|EXT\.\/INT\.|INT\b|EXT\b)/i.test(text)) {
         line.textContent = 'SCENE ' + n + ' ' + normalizeSceneCore(text);
       }
+      renderSceneBoxes(line);
       n += 1;
     });
   }
@@ -1944,7 +2026,17 @@ kbd {
       }
     }
 
-    var normalized = prefix + ' ' + rest.replace(/\s*-\s*/g, ' - ');
+    var normalizedRest = rest.replace(/\s*-\s*/g, ' - ');
+
+    // Important edit fix:
+    // When time is deleted, text becomes: LOCATION -
+    // Old code changed it back to: LOCATION -  (with trailing space),
+    // so Backspace kept deleting the re-created space and never reached the dash.
+    // Keep incomplete dash as 'LOCATION -' so Backspace can remove dash, location,
+    // prefix, and finally the whole slugline.
+    normalizedRest = normalizedRest.replace(/\s+-\s*$/, ' -');
+
+    var normalized = prefix + ' ' + normalizedRest;
     return label ? label + ' ' + normalized : normalized;
   }
 
@@ -2008,21 +2100,53 @@ kbd {
     line.className = 'line ' + type;
     line.dataset.type = type;
     line.dataset.placeholder = PLACEHOLDERS[type] || '';
-    line.contentEditable = 'true';
+    line.contentEditable = type === 'scene' ? 'false' : 'true';
     line.spellcheck = true;
     line.textContent = normalizeText(type, text || '');
+    if (type === 'scene') renderSceneBoxes(line);
     return line;
+  }
+
+  function stripParentheticalWrapper(text) {
+    text = text || '';
+    var value = text.trim();
+
+    // Remove only the auto parenthetical wrapper.
+    // Example: "(beat)" -> "beat", "(SKJASHKDJ" -> "SKJASHKDJ"
+    if (value.charAt(0) === '(') value = value.slice(1);
+    if (value.charAt(value.length - 1) === ')') value = value.slice(0, -1);
+
+    return value.trim();
   }
 
   function setLineType(line, type, keepCaret) {
     if (!line || TYPES.indexOf(type) === -1) return;
+    var oldType = line.dataset.type || 'action';
     var offset = getCaretOffset(line);
+    var plain = getLinePlainText(line);
+
+    // If writer changes Parenthetical to Action/Dialog/Character/etc.,
+    // remove the automatically created bracket.
+    if (oldType === 'parenthetical' && type !== 'parenthetical') {
+      plain = stripParentheticalWrapper(plain);
+      offset = Math.max(0, Math.min(offset - 1, plain.length));
+    }
+
     TYPES.forEach(function (t) { line.classList.remove(t); });
+    line.classList.remove('slug-boxed');
     line.classList.add(type);
     line.dataset.type = type;
     line.dataset.placeholder = PLACEHOLDERS[type] || '';
-    line.textContent = normalizeText(type, line.textContent || '');
-    if (keepCaret) setCaretOffset(line, Math.min(offset, (line.textContent || '').length));
+    line.contentEditable = type === 'scene' ? 'false' : 'true';
+    line.textContent = normalizeText(type, plain || '');
+
+    if (type === 'scene') {
+      renderSceneBoxes(line);
+      if (keepCaret) focusSlugPart(line, 'prefix', true);
+    } else if (keepCaret) {
+      setCaretOffset(line, Math.min(offset, (line.textContent || '').length));
+    }
+
     focusLine(line);
   }
 
@@ -2031,7 +2155,7 @@ kbd {
       title: (document.querySelector('#scriptTitle').value || 'Untitled Script'),
       titlePage: window.ScreenwriterTitlePage ? window.ScreenwriterTitlePage.getData() : null,
       lines: Array.from(editor.querySelectorAll('.line')).map(function (line) {
-        return { type: line.dataset.type || 'action', text: line.textContent || '' };
+        return { type: line.dataset.type || 'action', text: getLinePlainText(line) || '' };
       })
     };
   }
@@ -2049,12 +2173,100 @@ kbd {
       lines = defaultStartLines();
     }
     lines.forEach(function (item) { editor.appendChild(createLine(item.type || guessType(item.text), item.text || '')); });
+    cleanupDuplicateBlankSceneHeadings();
     renumberSceneHeadings();
     updateAll();
   }
 
+  function focusScenePrefix(line) {
+    if (!line) return false;
+    if (line.dataset.type === 'scene') {
+      if (!line.classList.contains('slug-boxed')) renderSceneBoxes(line);
+      renumberSceneHeadings();
+      return focusSlugPart(line, 'prefix', true);
+    }
+    return false;
+  }
+
+  function focusSceneEnd(line) {
+    if (!line) return false;
+    if (line.dataset.type === 'scene') {
+      if (!line.classList.contains('slug-boxed')) renderSceneBoxes(line);
+      renumberSceneHeadings();
+
+      var timeBox = getSlugBox(line, 'time');
+      var locationBox = getSlugBox(line, 'location');
+      var prefixBox = getSlugBox(line, 'prefix');
+
+      if (timeBox && (timeBox.textContent || '').trim()) return focusSlugPart(line, 'time', false);
+      if (locationBox && (locationBox.textContent || '').trim()) return focusSlugPart(line, 'location', false);
+      if (prefixBox) return focusSlugPart(line, 'prefix', false);
+    }
+    return false;
+  }
+
+  function removeEmptySceneAndFocusPrevious(line) {
+    if (!line || (line.dataset.type || '') !== 'scene') return false;
+    if (sceneLineHasSlugContent(line)) return false;
+
+    var prev = line.previousElementSibling;
+    if (!prev || !prev.classList || !prev.classList.contains('line')) return false;
+
+    line.remove();
+
+    if (prev.dataset && prev.dataset.type === 'scene' && prev.classList.contains('slug-boxed')) {
+      focusSceneEnd(prev);
+    } else {
+      placeCaretAtEnd(prev);
+    }
+
+    focusLine(prev);
+    hideSuggestions();
+    renumberSceneHeadings();
+    updateAll();
+    saveNow(false);
+    if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+    return true;
+  }
+
+  function sceneLineHasSlugContent(line) {
+    if (!line || (line.dataset.type || '') !== 'scene') return false;
+    var parts = parseScenePlainText(getLinePlainText(line) || '');
+    return !!((parts.prefix || '').trim() || (parts.location || '').trim() || (parts.time || '').trim());
+  }
+
+  function cleanupDuplicateBlankSceneHeadings(preferLine) {
+    if (!editor) return;
+    var changed = false;
+    var line = editor.firstElementChild;
+
+    while (line) {
+      var next = line.nextElementSibling;
+
+      if (line.dataset && line.dataset.type === 'scene' &&
+          next && next.dataset && next.dataset.type === 'scene' &&
+          !sceneLineHasSlugContent(line) &&
+          !sceneLineHasSlugContent(next)) {
+
+        var removeLine = next === preferLine ? line : next;
+        var moveTo = removeLine === line ? next : line;
+        removeLine.remove();
+        changed = true;
+        line = moveTo;
+        continue;
+      }
+
+      line = next;
+    }
+
+    if (changed) renumberSceneHeadings();
+  }
+
   function placeCaretAtEnd(element) {
     if (!element) return;
+    if (element.classList && element.classList.contains('slug-boxed')) {
+      if (focusSlugPart(element, 'prefix', true)) return;
+    }
     element.focus();
     var range = document.createRange();
     range.selectNodeContents(element);
@@ -2079,29 +2291,49 @@ kbd {
 
   function setCaretOffset(element, offset) {
     element.focus();
-    var textNode;
-    if (!element.firstChild) element.appendChild(document.createTextNode(''));
-    if (element.childNodes.length === 1 && element.firstChild.nodeType === Node.TEXT_NODE) {
-      textNode = element.firstChild;
-    } else {
-      element.textContent = element.textContent || '';
-      textNode = element.firstChild || element.appendChild(document.createTextNode(''));
+
+    var total = element.textContent || '';
+    offset = Math.max(0, Math.min(offset, total.length));
+
+    var walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    var node;
+    var count = 0;
+    while ((node = walker.nextNode())) {
+      var next = count + node.textContent.length;
+      if (offset <= next) {
+        var range = document.createRange();
+        range.setStart(node, Math.max(0, offset - count));
+        range.collapse(true);
+        var selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        return;
+      }
+      count = next;
     }
-    offset = Math.max(0, Math.min(offset, textNode.textContent.length));
-    var range = document.createRange();
-    range.setStart(textNode, offset);
-    range.collapse(true);
-    var selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
+
+    if (!element.firstChild) element.appendChild(document.createTextNode(''));
+    var fallback = element.firstChild.nodeType === Node.TEXT_NODE ? element.firstChild : element.appendChild(document.createTextNode(''));
+    var r = document.createRange();
+    r.setStart(fallback, fallback.textContent.length);
+    r.collapse(true);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(r);
   }
 
   function setCaretAfterSuggestion(line) {
-    // After replacing content and renumbering scenes, browsers can reset the
-    // contenteditable caret to the start. Always put it back at the right side
-    // of the accepted suggestion.
     if (!line) return;
     setTimeout(function () {
+      if (line.classList && line.classList.contains('slug-boxed')) {
+        var part = line.dataset.lastSlugPart || 'location';
+        var box = getSlugBox(line, part);
+        if (box) {
+          setCaretOffset(box, (box.textContent || '').length);
+          focusLine(line);
+          return;
+        }
+      }
       setCaretOffset(line, (line.textContent || '').length);
       focusLine(line);
     }, 0);
@@ -2172,7 +2404,7 @@ kbd {
       return {
         line: sceneLine,
         nodes: nodes,
-        text: (sceneLine.textContent || '').trim()
+        text: (getLinePlainText(sceneLine) || '').trim()
       };
     });
   }
@@ -2317,10 +2549,9 @@ kbd {
   function collectLocations() {
     var locations = [];
     editor.querySelectorAll('.line.scene').forEach(function (line) {
-      var text = stripLeadingTransition((line.textContent || '').trim().toUpperCase());
-      text = splitSceneNumberPrefix(text).rest.toUpperCase();
-      var match = text.match(/^(INT\.|EXT\.|INT\.\/EXT\.|EXT\.\/INT\.)\s+(.+?)(?:\s+-\s+.+)?$/);
-      if (match && match[2]) locations.push(match[2]);
+      var text = stripLeadingTransition((getLinePlainText(line) || '').trim().toUpperCase());
+      var parts = parseScenePlainText(text);
+      if (parts.location) locations.push(parts.location);
     });
     return unique(locations.concat(COMMON_LOCATIONS));
   }
@@ -2344,7 +2575,336 @@ kbd {
   }
 
   function getPrefixMatch(text) {
-    return text.match(/^(INT\.|EXT\.|INT\.\/EXT\.|EXT\.\/INT\.)\s*/);
+    // Long prefixes must be checked before INT. / EXT.
+    // Also tolerate older malformed text like 'INT. /EXT.' and normalize it.
+    var raw = text || '';
+    var match = raw.match(/^(INT\.\s*\/\s*EXT\.|EXT\.\s*\/\s*INT\.|INT\.|EXT\.)\s*/i);
+    if (!match) return null;
+
+    var normalized = match[1]
+      .toUpperCase()
+      .replace(/\s*\/\s*/g, '/');
+
+    return [match[0], normalized];
+  }
+
+  function parseScenePlainText(text) {
+    var raw = normalizeSpaces(text || '').trim();
+    var scene = splitSceneNumberPrefix(raw);
+    var label = scene.label || '';
+    var rest = scene.rest || '';
+    var prefix = '';
+    var location = '';
+    var time = '';
+
+    var prefixMatch = getPrefixMatch(rest.trimStart());
+    if (prefixMatch) {
+      prefix = prefixMatch[1];
+      rest = rest.trimStart().slice(prefixMatch[0].length).trim();
+    }
+
+    var dash = rest.indexOf('-');
+    if (dash >= 0) {
+      location = rest.slice(0, dash).trim().toUpperCase();
+      time = rest.slice(dash + 1).trim().toUpperCase();
+    } else {
+      location = rest.trim().toUpperCase();
+    }
+
+    return { label: label, prefix: prefix, location: location, time: time };
+  }
+
+  function getSlugBox(line, part) {
+    return line && line.querySelector ? line.querySelector('.slug-box[data-slug-part="' + part + '"]') : null;
+  }
+
+  function getLinePlainText(line) {
+    if (!line) return '';
+    if (line.classList && line.classList.contains('slug-boxed')) {
+      var sceneBox = getSlugBox(line, 'scene');
+      var prefixBox = getSlugBox(line, 'prefix');
+      var locationBox = getSlugBox(line, 'location');
+      var timeBox = getSlugBox(line, 'time');
+
+      var scene = sceneBox ? sceneBox.textContent.trim().toUpperCase() : '';
+      var prefix = prefixBox ? prefixBox.textContent.trim().toUpperCase() : '';
+      var location = locationBox ? locationBox.textContent.trim().toUpperCase() : '';
+      var time = timeBox ? timeBox.textContent.trim().toUpperCase() : '';
+
+      var out = scene || '';
+      if (prefix) out += (out ? ' ' : '') + prefix;
+      if (location) out += (out ? ' ' : '') + location;
+      if (prefix || location || time) out += ' - ' + time;
+      return normalizeSpaces(out).trimEnd();
+    }
+    return line.textContent || '';
+  }
+
+  function makeSlugBox(part, text, editable, placeholder) {
+    var span = document.createElement('span');
+    span.className = 'slug-box ' + (part === 'scene' ? 'scene-number' : part);
+    span.dataset.slugPart = part;
+    span.contentEditable = editable ? 'true' : 'false';
+    span.tabIndex = editable ? 0 : -1;
+    span.spellcheck = false;
+    span.dataset.placeholder = placeholder || '';
+    span.textContent = text || '';
+    span.addEventListener('focus', function () {
+      var line = span.closest('.line');
+      if (line) {
+        line.dataset.lastSlugPart = part === 'scene' ? 'prefix' : part;
+        focusLine(line);
+      }
+      setTimeout(updateSuggestions, 0);
+    });
+    span.addEventListener('click', function () {
+      var line = span.closest('.line');
+      if (line) line.dataset.lastSlugPart = part === 'scene' ? 'prefix' : part;
+      setTimeout(updateSuggestions, 0);
+    });
+    return span;
+  }
+
+  function renderSceneBoxes(line) {
+    if (!line || (line.dataset.type || '') !== 'scene') return;
+    var plain = line.classList && line.classList.contains('slug-boxed') ? getLinePlainText(line) : (line.textContent || '');
+    var parts = parseScenePlainText(plain);
+    if (!parts.label) {
+      var index = editor ? Array.from(editor.querySelectorAll('.line.scene')).indexOf(line) : 0;
+      parts.label = 'SCENE ' + (index >= 0 ? index + 1 : 1);
+    }
+
+    line.classList.add('slug-boxed');
+    line.contentEditable = 'false';
+    line.innerHTML = '';
+
+    line.appendChild(makeSlugBox('scene', parts.label, false, 'SCENE'));
+    line.appendChild(document.createTextNode(' '));
+    line.appendChild(makeSlugBox('prefix', parts.prefix, true, 'INT./EXT.'));
+    line.appendChild(document.createTextNode(' '));
+    line.appendChild(makeSlugBox('location', parts.location, true, 'LOCATION'));
+    line.appendChild(document.createTextNode(' '));
+
+    var dash = document.createElement('span');
+    dash.className = 'slug-dash';
+    dash.contentEditable = 'false';
+    dash.textContent = '-';
+    line.appendChild(dash);
+    line.appendChild(document.createTextNode(' '));
+
+    line.appendChild(makeSlugBox('time', parts.time, true, 'DAY'));
+  }
+
+  function normalizeSlugBoxes(line) {
+    if (!line || !line.classList || !line.classList.contains('slug-boxed')) return;
+
+    var activeBox = getActiveSlugBox(line);
+    var activePart = activeBox ? activeBox.dataset.slugPart : '';
+    var activeOffset = activeBox ? getCaretOffset(activeBox) : 0;
+
+    ['prefix', 'location', 'time'].forEach(function (part) {
+      var box = getSlugBox(line, part);
+      if (!box) return;
+
+      var oldText = box.textContent || '';
+      var newText = normalizeSpaces(oldText).toUpperCase().trimStart();
+
+      // If leading spaces were removed before the caret, shift caret left by that amount.
+      if (box === activeBox && oldText !== newText) {
+        var leadingRemoved = oldText.length - oldText.trimStart().length;
+        activeOffset = Math.max(0, activeOffset - leadingRemoved);
+      }
+
+      if (oldText !== newText) box.textContent = newText;
+    });
+
+    // Critical fix:
+    // Rewriting textContent in a contenteditable span resets caret to the start.
+    // Restore caret to the same box and offset after uppercase/spacing cleanup.
+    if (activeBox && line.contains(activeBox)) {
+      var restoredBox = getSlugBox(line, activePart);
+      if (restoredBox) {
+        setCaretOffset(restoredBox, Math.min(activeOffset, (restoredBox.textContent || '').length));
+      }
+    }
+  }
+
+  function focusSlugPart(line, part, selectAll) {
+    var box = getSlugBox(line, part);
+    if (!box) return false;
+    box.focus();
+
+    var range = document.createRange();
+    range.selectNodeContents(box);
+    if (!selectAll) range.collapse(false);
+
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    line.dataset.lastSlugPart = part;
+    focusLine(line);
+    setTimeout(updateSuggestions, 0);
+    return true;
+  }
+
+  function slugPartOrder() {
+    return ['prefix', 'location', 'time'];
+  }
+
+  function slugBoxCaretAtStart(box) {
+    return getCaretOffset(box) <= 0;
+  }
+
+  function slugBoxCaretAtEnd(box) {
+    return getCaretOffset(box) >= ((box && box.textContent) ? box.textContent.length : 0);
+  }
+
+  function moveSlugFocus(line, direction, selectAll) {
+    var active = getActiveSlugPart(line);
+    var order = slugPartOrder();
+    var index = order.indexOf(active);
+    if (index === -1) index = direction > 0 ? -1 : order.length;
+
+    var nextIndex = index + direction;
+    if (nextIndex < 0 || nextIndex >= order.length) return false;
+
+    return focusSlugPart(line, order[nextIndex], !!selectAll);
+  }
+
+  function handleSlugBoxNavigation(event) {
+    var target = event.target;
+    if (!target || !target.closest) return false;
+
+    var box = target.closest('.slug-box');
+    if (!box) return false;
+
+    var line = box.closest('.line');
+    if (!line || !line.classList.contains('slug-boxed')) return false;
+
+    // Scene number is automatic. If it somehow gets focus, move to prefix.
+    if (box.dataset.slugPart === 'scene') {
+      event.preventDefault();
+      focusSlugPart(line, 'prefix', true);
+      return true;
+    }
+
+    if (event.key === 'Tab') {
+      // Slugline Tab shortcuts removed.
+      // Tab should not move between invisible slug boxes and should not change element type.
+      event.preventDefault();
+      hideSuggestions();
+      return true;
+    }
+
+    if (event.key === 'ArrowRight' && !event.shiftKey && slugBoxCaretAtEnd(box)) {
+      if (moveSlugFocus(line, 1, false)) {
+        event.preventDefault();
+        hideSuggestions();
+        setTimeout(updateSuggestions, 0);
+        return true;
+      }
+    }
+
+    if (event.key === 'ArrowLeft' && !event.shiftKey && slugBoxCaretAtStart(box)) {
+      if (moveSlugFocus(line, -1, false)) {
+        event.preventDefault();
+        hideSuggestions();
+        setTimeout(updateSuggestions, 0);
+        return true;
+      }
+    }
+
+    if (event.key === 'Backspace' && slugBoxCaretAtStart(box) && !(box.textContent || '').trim()) {
+      // When all slugline boxes are empty, Backspace should delete the whole
+      // Scene line including SCENE 1, then move cursor back to previous line
+      // usually the Transition line.
+      if (!sceneLineHasSlugContent(line)) {
+        event.preventDefault();
+        return removeEmptySceneAndFocusPrevious(line);
+      }
+
+      if (moveSlugFocus(line, -1, false)) {
+        event.preventDefault();
+        hideSuggestions();
+        setTimeout(updateSuggestions, 0);
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function getActiveSlugPart(line) {
+    var selection = window.getSelection();
+    if (!selection || !selection.rangeCount) return '';
+    var node = selection.anchorNode;
+    if (node && node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+    var box = node && node.closest ? node.closest('.slug-box') : null;
+    if (!box || !line.contains(box)) return '';
+    var part = box.dataset.slugPart || '';
+    return part === 'scene' ? 'prefix' : part;
+  }
+
+  function getSlugPartFromClick(line, clientX) {
+    var parts = ['prefix', 'location', 'time'];
+    var bestPart = 'prefix';
+    var bestDistance = Infinity;
+
+    parts.forEach(function (part) {
+      var box = getSlugBox(line, part);
+      if (!box) return;
+      var rect = box.getBoundingClientRect();
+
+      if (clientX >= rect.left && clientX <= rect.right) {
+        bestPart = part;
+        bestDistance = 0;
+        return;
+      }
+
+      var distance = clientX < rect.left ? rect.left - clientX : clientX - rect.right;
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestPart = part;
+      }
+    });
+
+    return bestPart;
+  }
+
+  function focusSlugPartFromClick(line, event) {
+    if (!line || !line.classList || !line.classList.contains('slug-boxed')) return false;
+
+    var target = event.target;
+    var directBox = target && target.closest ? target.closest('.slug-box') : null;
+    var part = directBox && directBox.dataset.slugPart !== 'scene'
+      ? directBox.dataset.slugPart
+      : getSlugPartFromClick(line, event.clientX);
+
+    var box = getSlugBox(line, part);
+    if (!box) return false;
+
+    // If the click landed on the locked parent/dash/gap, move into the nearest editable box.
+    // If it landed inside a box, browser may set exact caret; still ensure the box receives focus.
+    if (!directBox || directBox.dataset.slugPart === 'scene') {
+      event.preventDefault();
+      focusSlugPart(line, part, false);
+    } else {
+      line.dataset.lastSlugPart = part;
+      setTimeout(updateSuggestions, 0);
+    }
+
+    focusLine(line);
+    return true;
+  }
+
+  function getActiveSlugBox(line) {
+    var selection = window.getSelection();
+    if (!selection || !selection.rangeCount) return null;
+    var node = selection.anchorNode;
+    if (node && node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+    var box = node && node.closest ? node.closest('.slug-box') : null;
+    return box && line.contains(box) ? box : null;
   }
 
   function getSceneEditContext(line) {
@@ -2421,63 +2981,83 @@ kbd {
     line.textContent = (transition ? transition + ' ' : '') + (label ? label + ' ' : '') + sceneCore;
   }
 
-  function buildSceneSuggestions(line) {
-    var rawText = line.textContent || '';
+  function parseSlugParts(line) {
+    if (line.classList && line.classList.contains('slug-boxed')) {
+      var sceneBox = getSlugBox(line, 'scene');
+      var prefixBox = getSlugBox(line, 'prefix');
+      var locationBox = getSlugBox(line, 'location');
+      var timeBox = getSlugBox(line, 'time');
+      var activePart = getActiveSlugPart(line) || line.dataset.lastSlugPart || 'prefix';
+      var activeBox = getSlugBox(line, activePart);
+      var caret = activeBox ? getCaretOffset(activeBox) : 0;
+
+      return {
+        boxed: true,
+        raw: getLinePlainText(line),
+        caret: caret,
+        activePart: activePart,
+        label: sceneBox ? sceneBox.textContent.trim().toUpperCase() : '',
+        prefix: prefixBox ? prefixBox.textContent.trim().toUpperCase() : '',
+        location: locationBox ? locationBox.textContent.trim().toUpperCase() : '',
+        time: timeBox ? timeBox.textContent.trim().toUpperCase() : ''
+      };
+    }
+
+    var raw = getLinePlainText(line) || '';
     var caret = getCaretOffset(line);
-    var combo = getLeadingTransition(rawText);
-    var transitionPrefix = '';
-    var textForScene = rawText;
-    var sceneCaret = caret;
+    var parts = parseScenePlainText(raw);
+    return {
+      boxed: false,
+      raw: raw,
+      caret: caret,
+      activePart: 'prefix',
+      label: parts.label,
+      prefix: parts.prefix,
+      location: parts.location,
+      time: parts.time
+    };
+  }
 
-    if (combo) {
-      transitionPrefix = combo.transition;
-      var transitionEnd = rawText.toUpperCase().indexOf(combo.transition) + combo.transition.length;
-      textForScene = rawText.slice(transitionEnd).trimStart();
-      sceneCaret = Math.max(0, caret - transitionEnd);
+  function replaceScenePart(line, part, value) {
+    if (!line.classList.contains('slug-boxed')) renderSceneBoxes(line);
+    var box = getSlugBox(line, part);
+    if (!box) return 0;
+    box.textContent = normalizeSpaces(value || '').toUpperCase().trimStart();
+    line.dataset.lastSlugPart = part;
+    return box.textContent.length;
+  }
+
+  function buildSceneSuggestions(line) {
+    if (!line.classList.contains('slug-boxed')) renderSceneBoxes(line);
+
+    var parts = parseSlugParts(line);
+    var part = parts.activePart || 'prefix';
+
+    if (part === 'prefix') {
+      var prefixBox = getSlugBox(line, 'prefix');
+      var q = prefixBox ? (prefixBox.textContent || '').toUpperCase().replace(/[^A-Z/.]/g, '') : '';
+      var prefixItems = filterItems(PREFIXES, q);
+      if (!prefixItems.length) return null;
+      return { title: 'Interior / Exterior', mode: 'prefix', items: prefixItems, part: 'prefix' };
     }
 
-    var sceneLabel = '';
-    var labelMatch = textForScene.match(/^(\s*SCENE\s+\d+\s*)/i);
-    if (labelMatch) {
-      sceneLabel = normalizeSpaces(labelMatch[1]).trim().toUpperCase();
-      textForScene = textForScene.slice(labelMatch[1].length);
-      sceneCaret = Math.max(0, sceneCaret - labelMatch[1].length);
+    if (part === 'location') {
+      var locationBox = getSlugBox(line, 'location');
+      var locationQuery = locationBox ? (locationBox.textContent || '').trim().toUpperCase() : '';
+      var locationItems = filterItems(collectLocations(), locationQuery);
+      if (!locationItems.length) return null;
+      return { title: 'Recent locations', mode: 'location', items: locationItems, part: 'location' };
     }
 
-    var text = textForScene.toUpperCase();
-    var before = text.slice(0, sceneCaret);
-    var trimmed = before.trimStart();
-    var prefixMatch = getPrefixMatch(trimmed);
-    var modePrefix = transitionPrefix ? 'combo-' : '';
-
-    if (!prefixMatch) {
-      var q = trimmed.replace(/[^A-Z/.]/g, '');
-      // When the line already has SCENE number but no INT/EXT yet, show every option.
-      // Old bug: it forced q = 'I', so EXT. disappeared.
-      if (!q && (transitionPrefix || sceneLabel)) q = '';
-      if (q && !/^[IE]/.test(q)) return null;
-      if (!q && !transitionPrefix && !sceneLabel) return null;
-      var prefixes = filterItems(PREFIXES, q);
-      if (!prefixes.length) return null;
-      return { title: sceneLabel ? 'Scene heading' : (transitionPrefix ? 'Scene after transition' : 'Scene heading'), mode: modePrefix + 'prefix', items: prefixes, transition: transitionPrefix, sceneLabel: sceneLabel };
+    if (part === 'time') {
+      var timeBox = getSlugBox(line, 'time');
+      var timeQuery = timeBox ? (timeBox.textContent || '').trim().toUpperCase() : '';
+      var timeItems = filterItems(TIMES, timeQuery);
+      if (!timeItems.length) return null;
+      return { title: 'Time of day', mode: 'time', items: timeItems, part: 'time' };
     }
 
-    var prefix = prefixMatch[1];
-    var afterPrefix = trimmed.slice(prefixMatch[0].length);
-    var dashIndex = afterPrefix.lastIndexOf('-');
-
-    if (dashIndex === -1) {
-      var locationQuery = afterPrefix.trimStart();
-      if (!before.endsWith(' ') && locationQuery.length < 1 && !transitionPrefix && !sceneLabel) return null;
-      var locations = filterItems(collectLocations(), locationQuery);
-      if (!locations.length) return null;
-      return { title: 'Recent locations', mode: modePrefix + 'location', items: locations, prefix: prefix, transition: transitionPrefix, sceneLabel: sceneLabel };
-    }
-
-    var timeQuery = afterPrefix.slice(dashIndex + 1).trimStart();
-    var timeItems = filterItems(TIMES, timeQuery);
-    if (!timeItems.length) return null;
-    return { title: 'Time of day', mode: modePrefix + 'time', items: timeItems, prefix: prefix, transition: transitionPrefix, sceneLabel: sceneLabel };
+    return null;
   }
 
   function buildCharacterSuggestions(line) {
@@ -2520,16 +3100,20 @@ kbd {
 
   function shouldTreatAsScene(line) {
     var type = line.dataset.type || 'action';
-    var raw = (line.textContent || '').trim();
-    var text = raw.toUpperCase();
-    var combo = getLeadingTransition(raw);
-    var sceneText = combo ? (combo.rest || '') : raw;
-    var sceneParts = splitSceneNumberPrefix(sceneText);
-    var rest = (sceneParts.rest || '').toUpperCase();
-    if (sceneParts.label) return true;
-    if (combo && (/^(I|IN|INT|INT\.|E|EX|EXT|EXT\.|INT\/|EXT\/)/.test(rest) || !rest.trim())) return true;
+
+    // Scene suggestions must appear only on actual Scene Heading lines.
+    // Old bug: Action text like "In Space, millions..." opened INT/EXT popup
+    // because it started with "In".
+    if (type === 'transition') return false;
+    if (line.classList && line.classList.contains('slug-boxed')) return true;
     if (type === 'scene') return true;
-    if (/^(I|IN|INT|INT\.|E|EX|EXT|EXT\.|INT\/|EXT\/)/.test(text) && text.length <= 50) return true;
+
+    // Allow explicit pasted/typed SCENE 1... to become a scene, but do not
+    // treat normal Action lines beginning with In/Int/Ext as sluglines.
+    var raw = (getLinePlainText(line) || '').trim();
+    var sceneParts = splitSceneNumberPrefix(raw);
+    if (sceneParts.label) return true;
+
     return false;
   }
 
@@ -2603,16 +3187,65 @@ kbd {
     suggestionsBox.hidden = false;
   }
 
+  function getCaretPopupAnchor(line) {
+    var lineRect = line.getBoundingClientRect();
+
+    if (line.classList && line.classList.contains('slug-boxed')) {
+      var activeBox = getActiveSlugBox(line);
+      if (activeBox) {
+        var boxRect = activeBox.getBoundingClientRect();
+        if (boxRect && (boxRect.width || boxRect.height)) {
+          return {
+            left: boxRect.left,
+            right: boxRect.right,
+            top: lineRect.top,
+            bottom: lineRect.bottom,
+            width: boxRect.width || 1,
+            height: lineRect.height
+          };
+        }
+      }
+    }
+
+    var selection = window.getSelection();
+
+    if (!selection || !selection.rangeCount) {
+      return lineRect;
+    }
+
+    var node = selection.anchorNode;
+    var parent = node && node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+    if (!parent || !parent.closest || parent.closest('.line') !== line) {
+      return lineRect;
+    }
+
+    var range = selection.getRangeAt(0).cloneRange();
+    range.collapse(true);
+
+    var rect = range.getBoundingClientRect();
+    if (rect && (rect.width || rect.height)) {
+      return {
+        left: rect.left,
+        right: rect.right || rect.left,
+        top: lineRect.top,
+        bottom: lineRect.bottom,
+        width: rect.width || 1,
+        height: lineRect.height
+      };
+    }
+
+    return lineRect;
+  }
+
   function positionSuggestions(line) {
     if (!suggestionsBox || !line) return;
 
     var margin = 10;
     var gap = 8;
-    var rect = line.getBoundingClientRect();
+    var lineRect = line.getBoundingClientRect();
+    var anchorRect = getCaretPopupAnchor(line);
 
     // Render invisibly first so we can measure the real popup height.
-    // This avoids the old bug where the popup was clamped upward and covered
-    // the line the writer was typing.
     suggestionsBox.hidden = false;
     suggestionsBox.style.visibility = 'hidden';
     suggestionsBox.style.left = '0px';
@@ -2623,29 +3256,26 @@ kbd {
     var boxWidth = boxRect.width || 260;
     var boxHeight = boxRect.height || 180;
 
-    var belowSpace = window.innerHeight - rect.bottom - gap - margin;
-    var aboveSpace = rect.top - gap - margin;
+    var belowSpace = window.innerHeight - lineRect.bottom - gap - margin;
+    var aboveSpace = lineRect.top - gap - margin;
     var placeBelow = belowSpace >= Math.min(boxHeight, 160) || belowSpace >= aboveSpace;
 
     var availableHeight = placeBelow ? belowSpace : aboveSpace;
     availableHeight = Math.max(96, Math.min(260, availableHeight));
     suggestionsBox.style.maxHeight = availableHeight + 'px';
 
-    // Re-measure after maxHeight adjustment.
     boxRect = suggestionsBox.getBoundingClientRect();
     boxHeight = Math.min(boxRect.height || boxHeight, availableHeight);
     boxWidth = boxRect.width || boxWidth;
 
-    var left = rect.left;
+    // Key fix: align popup to caret/current slugline part, not to full line start.
+    var left = anchorRect.left;
     if (left + boxWidth > window.innerWidth - margin) left = window.innerWidth - boxWidth - margin;
     if (left < margin) left = margin;
 
-    var top;
-    if (placeBelow) {
-      top = rect.bottom + gap;
-    } else {
-      top = rect.top - boxHeight - gap;
-    }
+    var top = placeBelow
+      ? lineRect.bottom + gap
+      : lineRect.top - boxHeight - gap;
 
     if (top < margin) top = margin;
     if (top + boxHeight > window.innerHeight - margin) {
@@ -2695,43 +3325,20 @@ kbd {
     if (!line || !value) return false;
 
     var mode = suggestionState.mode;
-    var current = (line.textContent || '').toUpperCase();
+
     if (mode === 'prefix' || mode === 'combo-prefix') {
       setLineType(line, 'scene', false);
-      // Replace only INT./EXT. part. Do not wipe existing LOCATION - TIME.
-      // Example: SCENE 4 INT. HOUSE - NIGHT -> SCENE 4 EXT. HOUSE - NIGHT
-      replaceOnlyScenePrefix(line, value, suggestionState.meta || {});
-      setCaretOffset(line, line.textContent.length);
+      replaceScenePart(line, 'prefix', value);
     }
 
     if (mode === 'location' || mode === 'combo-location') {
       setLineType(line, 'scene', false);
-      var comboTransition2 = (suggestionState.meta && suggestionState.meta.transition) || '';
-      var sceneLabel2 = (suggestionState.meta && suggestionState.meta.sceneLabel) || '';
-      var currentForPrefix = comboTransition2 ? stripLeadingTransition(line.textContent || '') : (line.textContent || '');
-      currentForPrefix = splitSceneNumberPrefix(currentForPrefix).rest || currentForPrefix;
-      var prefixMatch = getPrefixMatch((currentForPrefix || '').toUpperCase().trimStart());
-      var prefix = prefixMatch ? prefixMatch[1] : 'INT.';
-      var sceneText2 = (sceneLabel2 ? sceneLabel2 + ' ' : '') + prefix + ' ' + value + ' - ';
-      line.textContent = (comboTransition2 ? comboTransition2 + ' ' : '') + sceneText2;
-      setCaretOffset(line, line.textContent.length);
+      replaceScenePart(line, 'location', value);
     }
 
     if (mode === 'time' || mode === 'combo-time') {
       setLineType(line, 'scene', false);
-      var comboTransition3 = (suggestionState.meta && suggestionState.meta.transition) || '';
-      var sceneLabel3 = (suggestionState.meta && suggestionState.meta.sceneLabel) || '';
-      var text = (comboTransition3 ? stripLeadingTransition(line.textContent || '') : (line.textContent || '')).toUpperCase();
-      var sceneParts3 = splitSceneNumberPrefix(text);
-      if (!sceneLabel3 && sceneParts3.label) sceneLabel3 = sceneParts3.label;
-      text = sceneParts3.rest || text;
-      var match = getPrefixMatch(text.trimStart());
-      var prefixText = match ? match[1] : 'INT.';
-      var afterPrefix = match ? text.trimStart().slice(match[0].length) : text;
-      var location = afterPrefix.split('-')[0].trim() || 'LOCATION';
-      var sceneText3 = (sceneLabel3 ? sceneLabel3 + ' ' : '') + prefixText + ' ' + location + ' - ' + value;
-      line.textContent = (comboTransition3 ? comboTransition3 + ' ' : '') + sceneText3;
-      setCaretOffset(line, line.textContent.length);
+      replaceScenePart(line, 'time', value);
     }
 
     if (mode === 'character') {
@@ -2758,15 +3365,24 @@ kbd {
   function normalizeCurrentLine(line) {
     if (!line) return;
     var oldType = line.dataset.type || 'action';
-    var raw = line.textContent || '';
-    var trimmedUpper = raw.trim().toUpperCase();
 
-    if (oldType === 'action' && (/^(INT|EXT)(\b|\.|\/|\s)/.test(trimmedUpper) || /^SCENE\s+\d+\b/.test(trimmedUpper))) {
-      setLineType(line, 'scene', true);
-      oldType = 'scene';
+    if (oldType === 'scene' && line.classList.contains('slug-boxed')) {
+      normalizeSlugBoxes(line);
+      return;
     }
 
-    var normalized = normalizeText(oldType, line.textContent || '');
+    var raw = getLinePlainText(line) || '';
+    var trimmedUpper = raw.trim().toUpperCase();
+
+    // Do not auto-convert Action text into Scene Heading just because it starts
+    // with IN / INT / EXT. Example action: "In space, millions of twinkling stars."
+    // Scene Heading should be created by Scene element, transition flow, or shortcut.
+    if (oldType === 'action' && /^SCENE\s+\d+\b/.test(trimmedUpper)) {
+      setLineType(line, 'scene', true);
+      return;
+    }
+
+    var normalized = normalizeText(oldType, raw);
     if (normalized !== line.textContent) {
       var oldLength = (line.textContent || '').length;
       var offset = getCaretOffset(line);
@@ -2777,6 +3393,7 @@ kbd {
   }
 
   function updateAll() {
+    cleanupDuplicateBlankSceneHeadings(getCurrentLine());
     updateCounts();
     updateSceneList();
   }
@@ -2806,7 +3423,13 @@ kbd {
   function insertLineAfter(line, type, text) {
     var next = createLine(type, text || '');
     line.after(next);
-    placeCaretAtEnd(next);
+
+    if (type === 'scene' && next.classList && next.classList.contains('slug-boxed')) {
+      focusSlugPart(next, 'prefix', true);
+    } else {
+      placeCaretAtEnd(next);
+    }
+
     focusLine(next);
     updateAll();
     return next;
@@ -2818,21 +3441,28 @@ kbd {
 
     hideSuggestions();
     var currentType = line.dataset.type || 'action';
-    var hasText = !!(line.textContent || '').trim();
+    var hasText = !!(getLinePlainText(line) || '').trim();
 
     if (currentType === 'transition') {
       if (hasText) normalizeCurrentLine(line);
-      var nextScene = line.nextElementSibling && line.nextElementSibling.classList.contains('line') && line.nextElementSibling.dataset.type === 'scene' ? line.nextElementSibling : null;
-      if (nextScene) {
-        placeCaretAtEnd(nextScene);
-        focusLine(nextScene);
-        hideSuggestions();
-        setTimeout(updateSuggestions, 0);
-        return;
+
+      var nextScene = line.nextElementSibling &&
+        line.nextElementSibling.classList.contains('line') &&
+        line.nextElementSibling.dataset.type === 'scene'
+          ? line.nextElementSibling
+          : null;
+
+      if (!nextScene && hasText) {
+        nextScene = createLine('scene', makeSceneStarter());
+        line.after(nextScene);
       }
-      if (hasText) {
-        insertLineAfter(line, 'scene', makeSceneStarter());
+
+      if (nextScene) {
+        hideSuggestions();
+        cleanupDuplicateBlankSceneHeadings(nextScene);
         renumberSceneHeadings();
+        focusScenePrefix(nextScene);
+        focusLine(nextScene);
         updateAll();
         saveNow(false);
         if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
@@ -2872,30 +3502,75 @@ kbd {
 
     var line = getCurrentLine();
     if (!line) return;
-    var text = line.textContent || '';
+
+    var type = line.dataset.type || 'action';
+    var text = getLinePlainText(line) || '';
+
+    // Invisible slugline boxes: Enter should create/focus exactly one Action line.
+    // Old bug: it could create multiple blank Action lines under a completed slugline.
+    if (type === 'scene' && line.classList && line.classList.contains('slug-boxed')) {
+      normalizeSlugBoxes(line);
+
+      var existingAction = line.nextElementSibling &&
+        line.nextElementSibling.classList.contains('line') &&
+        line.nextElementSibling.dataset.type === 'action' &&
+        !(getLinePlainText(line.nextElementSibling) || '').trim()
+          ? line.nextElementSibling
+          : null;
+
+      var actionLine = existingAction || insertLineAfter(line, 'action', '');
+      hideSuggestions();
+      placeCaretAtEnd(actionLine);
+      focusLine(actionLine);
+      updateAll();
+      saveNow(false);
+      if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+      return;
+    }
+
+    // Do not create a second empty Action line when current Action is blank.
+    if (type === 'action' && !text.trim()) {
+      hideSuggestions();
+      focusLine(line);
+      return;
+    }
+
     var offset = getCaretOffset(line);
     var before = text.slice(0, offset);
     var after = text.slice(offset);
-    var type = line.dataset.type || 'action';
 
     if (type === 'transition' && !after.trim()) {
       line.textContent = normalizeText(type, before);
-      var existingScene = line.nextElementSibling && line.nextElementSibling.classList.contains('line') && line.nextElementSibling.dataset.type === 'scene' ? line.nextElementSibling : null;
-      if (existingScene) {
-        hideSuggestions();
-        placeCaretAtEnd(existingScene);
-        focusLine(existingScene);
-        saveNow(false);
-        if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
-        setTimeout(updateSuggestions, 0);
-        return;
-      }
+
+      var existingScene = line.nextElementSibling &&
+        line.nextElementSibling.classList.contains('line') &&
+        line.nextElementSibling.dataset.type === 'scene'
+          ? line.nextElementSibling
+          : null;
+
+      var sceneLine = existingScene || createLine('scene', makeSceneStarter());
+      if (!existingScene) line.after(sceneLine);
+
+      hideSuggestions();
+      cleanupDuplicateBlankSceneHeadings(sceneLine);
+      renumberSceneHeadings();
+      focusScenePrefix(sceneLine);
+      focusLine(sceneLine);
+      updateAll();
+      saveNow(false);
+      if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+      setTimeout(updateSuggestions, 0);
+      return;
     }
 
     line.textContent = normalizeText(type, before);
-    var newType = after.trim() ? type : nextType(type);
+    var newType = type === 'action' ? 'action' : (after.trim() ? type : nextType(type));
     var next = insertLineAfter(line, newType, after.trim() ? after.trimStart() : (newType === 'scene' ? makeSceneStarter() : ''));
-    if (after.trim()) setCaretOffset(next, 0);
+    if (newType === 'scene') {
+      focusScenePrefix(next);
+    } else if (after.trim()) {
+      setCaretOffset(next, 0);
+    }
     hideSuggestions();
     renumberSceneHeadings();
     saveNow(false);
@@ -2904,12 +3579,55 @@ kbd {
 
   function handleBackspace(event) {
     var line = getCurrentLine();
-    if (!line || getCaretOffset(line) !== 0) return;
+    if (!line) return;
+
+    // Slugline is made from invisible inner boxes.
+    // Let the browser/backbox navigation handle deletion inside those boxes.
+    // Never flatten a boxed slugline by setting line.textContent here.
+    if (line.classList && line.classList.contains('slug-boxed')) return;
+
+    if (getCaretOffset(line) !== 0) return;
+
     var prev = line.previousElementSibling;
     if (!prev || !prev.classList.contains('line')) return;
+
+    var currentText = getLinePlainText(line) || '';
+    var prevIsSlugline = prev.dataset &&
+      prev.dataset.type === 'scene' &&
+      prev.classList &&
+      prev.classList.contains('slug-boxed');
+
     event.preventDefault();
-    var prevLength = (prev.textContent || '').length;
-    prev.textContent = (prev.textContent || '') + (line.textContent || '');
+
+    // Empty line after a slugline/action/etc: remove it and focus previous line.
+    if (!currentText.trim()) {
+      line.remove();
+
+      if (prevIsSlugline) {
+        focusSceneEnd(prev);
+      } else {
+        placeCaretAtEnd(prev);
+      }
+
+      focusLine(prev);
+      updateAll();
+      saveNow(false);
+      if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+      return;
+    }
+
+    // Text line at start after slugline: do not merge into slugline boxes.
+    // Just move focus to slugline safely.
+    if (prevIsSlugline) {
+      focusSceneEnd(prev);
+      focusLine(prev);
+      hideSuggestions();
+      return;
+    }
+
+    // Normal text-to-text merge.
+    var prevLength = (getLinePlainText(prev) || '').length;
+    prev.textContent = (getLinePlainText(prev) || '') + currentText;
     line.remove();
     setCaretOffset(prev, prevLength);
     focusLine(prev);
@@ -2926,18 +3644,78 @@ kbd {
     updateAll();
   }
 
-  function handleTab(event) {
+  function handleElementShortcut(event) {
+    // Ctrl+Alt is unreliable in browsers/Windows keyboard layouts.
+    // Use Ctrl+Shift+1..7 and read event.code so Shift symbols (! @ #) don't break it.
+    if (!(event.ctrlKey || event.metaKey) || !event.shiftKey || event.altKey) return false;
+
+    var code = event.code || '';
+    var key = event.key || '';
+    var map = {
+      Digit1: 'scene',
+      Digit2: 'action',
+      Digit3: 'character',
+      Digit4: 'parenthetical',
+      Digit5: 'dialogue',
+      Digit6: 'transition',
+      Digit7: 'shot',
+      Numpad1: 'scene',
+      Numpad2: 'action',
+      Numpad3: 'character',
+      Numpad4: 'parenthetical',
+      Numpad5: 'dialogue',
+      Numpad6: 'transition',
+      Numpad7: 'shot'
+    };
+
+    var type = map[code];
+
+    // Fallback for keyboards/browsers that don't report event.code.
+    if (!type) {
+      var fallback = String(key).replace(/[^0-9]/g, '');
+      var keyMap = {
+        '1': 'scene',
+        '2': 'action',
+        '3': 'character',
+        '4': 'parenthetical',
+        '5': 'dialogue',
+        '6': 'transition',
+        '7': 'shot'
+      };
+      type = keyMap[fallback];
+    }
+
+    if (!type) return false;
+
     event.preventDefault();
-    if (suggestionState.visible) {
-      applySuggestion();
-      return;
+    event.stopPropagation();
+
+    var line = getCurrentLine();
+    if (!line) return true;
+
+    setLineType(line, type, true);
+
+    if (type === 'scene') {
+      if (!line.classList.contains('slug-boxed')) renderSceneBoxes(line);
+      renumberSceneHeadings();
+      focusScenePrefix(line);
+    } else {
+      placeCaretAtEnd(line);
     }
-    updateSuggestions();
-    if (suggestionState.visible) {
-      applySuggestion();
-      return;
-    }
-    cycleType(getCurrentLine());
+
+    hideSuggestions();
+    updateAll();
+    saveNow(false);
+    if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
+
+    return true;
+  }
+
+  function handleTab(event) {
+    // Tab shortcuts removed.
+    // Element changes now use Ctrl+Shift+1..7 only.
+    event.preventDefault();
+    hideSuggestions();
   }
 
   function handlePaste(event) {
@@ -2948,7 +3726,9 @@ kbd {
     var parts = text.replace(/\r/g, '').split('\n');
     var first = parts.shift();
     var offset = getCaretOffset(line);
-    var current = line.textContent || '';
+    var current = getLinePlainText(line) || '';
+    line.classList.remove('slug-boxed');
+    line.contentEditable = 'true';
     line.textContent = current.slice(0, offset) + first + current.slice(offset);
     normalizeCurrentLine(line);
     var currentLine = line;
@@ -2976,6 +3756,12 @@ kbd {
         hideSuggestions();
         return;
       }
+
+      if (line.classList && line.classList.contains('slug-boxed')) {
+        focusSlugPartFromClick(line, event);
+        return;
+      }
+
       setTimeout(updateSuggestions, 0);
     });
 
@@ -2983,11 +3769,37 @@ kbd {
       var target = event.target;
       if (!target || !target.closest) return;
       if (target.closest('#suggestions')) return;
-      if (target.closest('.line') && editor.contains(target.closest('.line'))) return;
+
+      var clickedLine = target.closest('.line');
+      if (clickedLine && editor.contains(clickedLine)) {
+        if (clickedLine.classList && clickedLine.classList.contains('slug-boxed')) {
+          focusSlugPartFromClick(clickedLine, event);
+        }
+        return;
+      }
+
       hideSuggestions();
     });
+
+    document.addEventListener('selectionchange', function () {
+      // Covers keyboard cursor movement, mouse selection, Home/End, and browser selection updates.
+      if (!editor || !document.activeElement || !editor.contains(document.activeElement)) return;
+      if (suggestionsAreMuted()) return;
+      window.clearTimeout(document._screenwriterSelectionTimer);
+      document._screenwriterSelectionTimer = window.setTimeout(function () {
+        if (activeLineAllowsSuggestions()) updateSuggestions();
+      }, 0);
+    });
+
     editor.addEventListener('keyup', function (event) {
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape', 'Enter', 'Tab'].indexOf(event.key) === -1) updateSuggestions();
+      // Keyboard caret movement must refresh slugline suggestions.
+      // Old bug: mouse click worked, but Arrow/Home/End movement did not.
+      if (event.key === 'Escape' || event.key === 'Enter' || event.key === 'Tab') return;
+
+      // ArrowUp / ArrowDown are reserved for navigating suggestions while popup is open.
+      if (suggestionState.visible && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) return;
+
+      setTimeout(updateSuggestions, 0);
     });
 
     editor.addEventListener('input', function () {
@@ -3000,6 +3812,9 @@ kbd {
     });
 
     editor.addEventListener('keydown', function (event) {
+      if (handleElementShortcut(event)) return;
+      if (handleSlugBoxNavigation(event)) return;
+
       if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
         event.preventDefault();
         event.stopPropagation();
