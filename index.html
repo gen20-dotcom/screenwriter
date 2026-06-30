@@ -1027,6 +1027,89 @@ kbd {
   color: transparent;
 }
 
+
+/* Clean thin scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(2, 62, 138, 0.22) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(2, 62, 138, 0.20);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(2, 62, 138, 0.35);
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Sidebar scrollbar should almost disappear */
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(2, 62, 138, 0.16) transparent;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(2, 62, 138, 0.14);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(2, 62, 138, 0.28);
+  background-clip: padding-box;
+}
+
+
+/* Clean Fast Keys panel */
+.compact-help p {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin: 7px 0;
+  color: var(--sidebar-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.compact-help kbd {
+  flex: 0 0 auto;
+}
+
+
+/* Shot popup can show more options */
+.suggestions {
+  max-height: 340px;
+}
+
 </style>
 </head>
 <body>
@@ -1099,22 +1182,22 @@ kbd {
 
       <section class="panel compact-help">
         <div class="panel-title">Fast keys</div>
-        <p><kbd>Enter</kbd> next screenplay line</p>
+
+        <p><kbd>Enter</kbd> next screenplay line / select suggestion</p>
         <p><kbd>Ctrl</kbd> + <kbd>Enter</kbd> next element</p>
-        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> Scene</p>
-        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>2</kbd> Action</p>
-        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>3</kbd> Character</p>
-        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>4</kbd> Parenthetical</p>
-        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>5</kbd> Dialogue</p>
-        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>6</kbd> Transition</p>
-        <p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>7</kbd> Shot</p>
-        <p><kbd>↑</kbd>/<kbd>↓</kbd> move suggestions</p>
+
+        <p><kbd>Ctrl</kbd> + <kbd>1</kbd> Scene Heading</p>
+        <p><kbd>Ctrl</kbd> + <kbd>2</kbd> Action</p>
+        <p><kbd>Ctrl</kbd> + <kbd>3</kbd> Character</p>
+        <p><kbd>Ctrl</kbd> + <kbd>4</kbd> Parenthetical</p>
+
+        <p><kbd>Ctrl</kbd> + <kbd>M</kbd> Dialogue</p>
+        <p><kbd>Ctrl</kbd> + <kbd>Q</kbd> Transition</p>
+        <p><kbd>Ctrl</kbd> + <kbd>E</kbd> Shot</p>
+
+        <p><kbd>↑</kbd> / <kbd>↓</kbd> move suggestions</p>
         <p><kbd>Esc</kbd> hide suggestions</p>
-        <p>Drag scenes in sidebar to reorder</p>
-        <p>Transition can sit before Scene 1</p>
-        <p>Scene number + slugline same line</p>
         <p><kbd>Ctrl</kbd> + <kbd>S</kbd> save</p>
-        <p><kbd>Ctrl</kbd> + <kbd>4</kbd> transition list</p>
       </section>
     </aside>
 
@@ -1135,13 +1218,13 @@ kbd {
             <span class="chevron">▾</span>
           </button>
           <div class="dropdown-menu">
-            <button data-type="scene" type="button">Scene Heading <span class="shortcut-hint">Ctrl+Shift+1</span></button>
-            <button data-type="action" type="button">Action <span class="shortcut-hint">Ctrl+Shift+2</span></button>
-            <button data-type="character" type="button">Character <span class="shortcut-hint">Ctrl+Shift+3</span></button>
-            <button data-type="parenthetical" type="button">Parenthetical <span class="shortcut-hint">Ctrl+Shift+4</span></button>
-            <button data-type="dialogue" type="button">Dialogue <span class="shortcut-hint">Ctrl+Shift+5</span></button>
-            <button data-type="transition" type="button">Transition <span class="shortcut-hint">Ctrl+Shift+6</span></button>
-            <button data-type="shot" type="button">Shot <span class="shortcut-hint">Ctrl+Shift+7</span></button>
+            <button data-type="scene" type="button">Scene Heading <span class="shortcut-hint">Ctrl+1</span></button>
+            <button data-type="action" type="button">Action <span class="shortcut-hint">Ctrl+2</span></button>
+            <button data-type="character" type="button">Character <span class="shortcut-hint">Ctrl+3</span></button>
+            <button data-type="parenthetical" type="button">Parenthetical <span class="shortcut-hint">Ctrl+4</span></button>
+            <button data-type="dialogue" type="button">Dialogue <span class="shortcut-hint">Ctrl+M</span></button>
+            <button data-type="transition" type="button">Transition <span class="shortcut-hint">Ctrl+Q</span></button>
+            <button data-type="shot" type="button">Shot <span class="shortcut-hint">Ctrl+E</span></button>
           </div>
         </div>
 
@@ -1887,6 +1970,58 @@ kbd {
   var PREFIXES = ['INT.', 'EXT.', 'INT./EXT.', 'EXT./INT.'];
   var TIMES = ['DAY', 'NIGHT', 'EVENING', 'MORNING', 'SUNSET', 'SUNRISE', 'CONTINUOUS', 'LATER', 'MOMENTS LATER', 'SAME TIME', 'DAWN', 'DUSK'];
   var TRANSITIONS = ['CUT TO:', 'FADE IN:', 'FADE OUT:', 'FADE TO BLACK.', 'DISSOLVE TO:', 'SMASH CUT TO:', 'MATCH CUT TO:', 'JUMP CUT TO:', 'HARD CUT TO:', 'WIPE TO:', 'BACK TO:', 'INTERCUT WITH:', 'SUPER:', 'TITLE CARD:', 'END CREDITS'];
+
+  var SHOTS = [
+    'CLOSE UP',
+    'EXTREME CLOSE UP',
+    'MEDIUM CLOSE UP',
+    'MEDIUM SHOT',
+    'MEDIUM LONG SHOT',
+    'WIDE SHOT',
+    'LONG SHOT',
+    'EXTREME WIDE SHOT',
+    'MASTER SHOT',
+    'TWO SHOT',
+    'THREE SHOT',
+    'GROUP SHOT',
+    'OVER THE SHOULDER',
+    'POINT OF VIEW',
+    'INSERT',
+    'CUTAWAY',
+    'REACTION SHOT',
+    'REVEAL SHOT',
+    'ESTABLISHING SHOT',
+    'TRACKING SHOT',
+    'DOLLY SHOT',
+    'DOLLY IN',
+    'DOLLY OUT',
+    'PUSH IN',
+    'PULL OUT',
+    'CRANE SHOT',
+    'AERIAL SHOT',
+    'DRONE SHOT',
+    'STEADICAM',
+    'HANDHELD',
+    'LOW ANGLE',
+    'HIGH ANGLE',
+    'TOP ANGLE',
+    'DUTCH ANGLE',
+    'BIRD\'S EYE VIEW',
+    'GROUND LEVEL SHOT',
+    'PAN',
+    'TILT',
+    'WHIP PAN',
+    'ZOOM IN',
+    'ZOOM OUT',
+    'RACK FOCUS',
+    'FOCUS PULL',
+    'SLOW MOTION',
+    'FREEZE FRAME',
+    'SILHOUETTE SHOT',
+    'MONTAGE',
+    'MATCH CUT',
+    'JUMP CUT'
+  ];
   var COMMON_LOCATIONS = ['COFFEE SHOP', 'COLLEGE', 'COURTROOM', 'CORRIDOR', 'POLICE STATION', 'HOSPITAL', 'AIRPORT', 'BANK', 'HOUSE', 'OFFICE', 'STREET', 'RESTAURANT', 'HOSTEL', 'CLASSROOM', 'PARKING LOT'];
 
   function defaultStartLines() {
@@ -1997,6 +2132,65 @@ kbd {
   function stripLeadingTransition(text) {
     var found = getLeadingTransition(text);
     return found && found.rest ? found.rest : text;
+  }
+
+  function cleanTransitionCandidate(text) {
+    return normalizeSpaces(text || '')
+      .trim()
+      .replace(/\s*-\s*$/g, '')
+      .replace(/\s+/g, ' ')
+      .toUpperCase();
+  }
+
+  function getSceneMistakenTransition(line, plainText) {
+    var candidates = [];
+
+    if (line && line.classList && line.classList.contains('slug-boxed')) {
+      var prefixBox = getSlugBox(line, 'prefix');
+      var locationBox = getSlugBox(line, 'location');
+      var timeBox = getSlugBox(line, 'time');
+
+      var prefix = prefixBox ? cleanTransitionCandidate(prefixBox.textContent) : '';
+      var location = locationBox ? cleanTransitionCandidate(locationBox.textContent) : '';
+      var time = timeBox ? cleanTransitionCandidate(timeBox.textContent) : '';
+
+      if (prefix) candidates.push(prefix);
+      if (location) candidates.push(location);
+      if (time) candidates.push(time);
+      if (prefix || location || time) candidates.push(cleanTransitionCandidate([prefix, location, time].join(' ')));
+    }
+
+    var raw = plainText || (line ? getLinePlainText(line) : '') || '';
+    var sceneParts = splitSceneNumberPrefix(raw);
+    var rest = sceneParts.rest || raw;
+    candidates.push(cleanTransitionCandidate(rest));
+
+    for (var i = 0; i < candidates.length; i += 1) {
+      var found = getLeadingTransition(candidates[i]);
+      if (found && found.transition) return found.transition;
+    }
+
+    return '';
+  }
+
+  function convertSceneTransitionMistake(line) {
+    if (!line || (line.dataset.type || '') !== 'scene') return false;
+
+    var transition = getSceneMistakenTransition(line);
+    if (!transition) return false;
+
+    TYPES.forEach(function (t) { line.classList.remove(t); });
+    line.classList.remove('slug-boxed');
+    line.classList.add('transition');
+    line.dataset.type = 'transition';
+    line.dataset.placeholder = PLACEHOLDERS.transition || 'CUT TO:';
+    line.contentEditable = 'true';
+    line.textContent = transition;
+
+    hideSuggestions();
+    focusLine(line);
+    setCaretOffset(line, transition.length);
+    return true;
   }
 
   function knownTimeAtEnd(rest) {
@@ -2138,6 +2332,21 @@ kbd {
     var offset = getCaretOffset(line);
     var plain = getLinePlainText(line);
 
+    // Prevent transition text from becoming a Scene Heading like:
+    // SCENE 1 SMASH CUT TO: -
+    if (type === 'transition' && oldType === 'scene') {
+      plain = getSceneMistakenTransition(line, plain) || '';
+      offset = plain.length;
+    }
+
+    if (type === 'scene') {
+      var mistakenTransition = getLeadingTransition(cleanTransitionCandidate(plain));
+      if (oldType === 'transition' || mistakenTransition) {
+        plain = makeSceneStarter();
+        offset = plain.length;
+      }
+    }
+
     // If writer changes Parenthetical to Action/Dialog/Character/etc.,
     // remove the automatically created bracket.
     if (oldType === 'parenthetical' && type !== 'parenthetical') {
@@ -2151,7 +2360,7 @@ kbd {
     line.dataset.type = type;
     line.dataset.placeholder = PLACEHOLDERS[type] || '';
     line.contentEditable = type === 'scene' ? 'false' : 'true';
-    line.textContent = normalizeText(type, plain || '');
+    line.textContent = (type === 'shot' && !(plain || '').trim()) ? '' : normalizeText(type, plain || '');
 
     if (type === 'scene') {
       renderSceneBoxes(line);
@@ -2160,7 +2369,12 @@ kbd {
       setCaretOffset(line, Math.min(offset, (line.textContent || '').length));
     }
 
+    hideSuggestions();
     focusLine(line);
+    setTimeout(function () {
+      var current = getCurrentLineStrict && getCurrentLineStrict();
+      if (!current || current !== line || (current.dataset.type || 'action') !== type) hideSuggestions();
+    }, 0);
   }
 
   function serialize() {
@@ -2366,9 +2580,15 @@ kbd {
   }
 
   function getCurrentLineStrict() {
-    // Same as getCurrentLine(), but never falls back to the first/active line.
-    // This prevents suggestions from reopening when the writer clicks blank white
-    // space on the page.
+    // Same as getCurrentLine(), but never falls back to the first line.
+    // Important: empty contenteditable lines can have focus before browser
+    // updates selection, so use document.activeElement first.
+    var active = document.activeElement;
+    if (active && active.closest) {
+      var activeLine = active.closest('.line');
+      if (activeLine && editor.contains(activeLine)) return activeLine;
+    }
+
     var selection = window.getSelection();
     if (!selection || !selection.rangeCount) return null;
     var node = selection.anchorNode;
@@ -2382,9 +2602,13 @@ kbd {
 
   function activeLineAllowsSuggestions() {
     var active = document.activeElement;
-    if (!active || !active.closest) return false;
-    var activeLine = active.closest('.line');
-    return !!(activeLine && editor.contains(activeLine));
+    if (active && active.closest) {
+      var activeLine = active.closest('.line');
+      if (activeLine && editor.contains(activeLine)) return true;
+    }
+
+    var line = getCurrentLineStrict();
+    return !!(line && editor.contains(line));
   }
 
   function focusLine(line) {
@@ -2668,12 +2892,12 @@ kbd {
         line.dataset.lastSlugPart = part === 'scene' ? 'prefix' : part;
         focusLine(line);
       }
-      setTimeout(updateSuggestions, 0);
+      openFocusedSuggestionsSoon();
     });
     span.addEventListener('click', function () {
       var line = span.closest('.line');
       if (line) line.dataset.lastSlugPart = part === 'scene' ? 'prefix' : part;
-      setTimeout(updateSuggestions, 0);
+      openFocusedSuggestionsSoon();
     });
     return span;
   }
@@ -3041,7 +3265,13 @@ kbd {
   }
 
   function buildSceneSuggestions(line) {
+    if (!line || (line.dataset.type || 'action') !== 'scene') return null;
     if (!line.classList.contains('slug-boxed')) renderSceneBoxes(line);
+
+    if (getSceneMistakenTransition(line)) {
+      convertSceneTransitionMistake(line);
+      return null;
+    }
 
     var parts = parseSlugParts(line);
     var part = parts.activePart || 'prefix';
@@ -3095,39 +3325,68 @@ kbd {
     var text = line.textContent || '';
     var caret = getCaretOffset(line);
     var before = text.slice(0, caret).toUpperCase().trim();
+    var full = text.toUpperCase().trim();
     var type = line.dataset.type || 'action';
 
-    // Important fix:
-    // If the writer already chose a Transition line and deletes the text,
-    // the assistant should not go silent. Empty Transition line = show all transitions.
-    if (forceAll || (type === 'transition' && !before)) {
+    // Never show transition popup outside Transition element.
+    if (type !== 'transition') return null;
+
+    // Empty Transition line = show all transitions.
+    if (forceAll || !before) {
       return { title: 'Transitions', mode: 'transition', items: TRANSITIONS.slice(0, 12) };
     }
 
-    if (!before || before.length > 24) return null;
+    // If the line already has one complete transition, hide popup.
+    if (TRANSITIONS.indexOf(full) !== -1) return null;
+
+    if (before.length > 24) return null;
 
     var items = filterItems(TRANSITIONS, before);
     if (!items.length) return null;
+
+    // If only exact same item is available, popup is not needed.
+    if (items.length === 1 && items[0] === full) return null;
+
     return { title: 'Transitions', mode: 'transition', items: items };
+  }
+
+  function buildShotSuggestions(line, forceAll) {
+    var text = line.textContent || '';
+    var caret = getCaretOffset(line);
+    var before = text.slice(0, caret).toUpperCase().trim();
+    var full = text.toUpperCase().trim();
+    var type = line.dataset.type || 'action';
+
+    // Shot popup only on Shot element.
+    if (type !== 'shot') return null;
+
+    // Empty Shot line = show common shots.
+    // If the line only contains the default word "SHOT", also show suggestions.
+    if (forceAll || !before || full === 'SHOT') {
+      return { title: 'Shots', mode: 'shot', items: SHOTS.slice(0, 30) };
+    }
+
+    // If line already has complete shot name, hide popup.
+    if (SHOTS.indexOf(full) !== -1) return null;
+
+    if (before.length > 32) return null;
+
+    var items = filterItems(SHOTS, before);
+    if (!items.length) return null;
+
+    if (items.length === 1 && items[0] === full) return null;
+
+    return { title: 'Shots', mode: 'shot', items: items };
   }
 
   function shouldTreatAsScene(line) {
     var type = line.dataset.type || 'action';
 
-    // Scene suggestions must appear only on actual Scene Heading lines.
-    // Old bug: Action text like "In Space, millions..." opened INT/EXT popup
-    // because it started with "In".
-    if (type === 'transition') return false;
-    if (line.classList && line.classList.contains('slug-boxed')) return true;
-    if (type === 'scene') return true;
-
-    // Allow explicit pasted/typed SCENE 1... to become a scene, but do not
-    // treat normal Action lines beginning with In/Int/Ext as sluglines.
-    var raw = (getLinePlainText(line) || '').trim();
-    var sceneParts = splitSceneNumberPrefix(raw);
-    if (sceneParts.label) return true;
-
-    return false;
+    // Scene popup must appear only for actual Scene Heading lines.
+    // Text content like "SCENE 1 EXT. COLLEGE - EVENING" inside Character/Action
+    // should not trigger INT/EXT popup.
+    if (type !== 'scene') return false;
+    return true;
   }
 
   function shouldTreatAsCharacter(line) {
@@ -3141,24 +3400,40 @@ kbd {
 
   function shouldTreatAsTransition(line) {
     var type = line.dataset.type || 'action';
-    var text = (line.textContent || '').trim().toUpperCase();
-    if (type === 'transition') return true;
-    if (type !== 'action') return false;
-    if (!text || text.length > 24) return false;
-    if (/^(CUT|FA|FAD|FADE|DIS|DISS|DISSOLVE|SMA|SMASH|MAT|MATCH|JUM|JUMP|HAR|HARD|WIP|WIPE|BAC|BACK|INTC|INTER|INTERCUT|SUP|SUPER|TIT|TITLE|END)/.test(text)) return true;
-    return false;
+
+    // Important:
+    // Transition popup should not appear on Action lines just because
+    // the text looks like "SMASH CUT TO:" or "CUT TO:".
+    // It must appear only when the current element is Transition.
+    return type === 'transition';
+  }
+
+  function openFocusedSuggestionsSoon() {
+    window.clearTimeout(document._screenwriterFocusSuggestionTimer);
+    document._screenwriterFocusSuggestionTimer = window.setTimeout(function () {
+      updateSuggestions();
+    }, 30);
   }
 
   function updateSuggestions() {
     if (suggestionsAreMuted()) return hideSuggestions();
     if (!activeLineAllowsSuggestions()) return hideSuggestions();
+
     var line = getCurrentLineStrict();
     if (!line) return hideSuggestions();
 
+    var active = document.activeElement;
+    var activeLine = active && active.closest ? active.closest('.line') : null;
+    if (activeLine !== line) return hideSuggestions();
+
+    var lineType = line.dataset.type || 'action';
     var result = null;
-    if (shouldTreatAsScene(line)) result = buildSceneSuggestions(line);
-    if (!result && shouldTreatAsCharacter(line)) result = buildCharacterSuggestions(line);
-    if (!result && shouldTreatAsTransition(line)) result = buildTransitionSuggestions(line, false);
+
+    if (lineType === 'scene') result = buildSceneSuggestions(line);
+    else if (lineType === 'character') result = buildCharacterSuggestions(line);
+    else if (lineType === 'transition') result = buildTransitionSuggestions(line, false);
+    else if (lineType === 'shot') result = buildShotSuggestions(line, false);
+    else return hideSuggestions();
 
     if (!result || !result.items || !result.items.length) return hideSuggestions();
     showSuggestions(line, result.title, result.mode, result.items, result);
@@ -3366,6 +3641,12 @@ kbd {
       setCaretOffset(line, line.textContent.length);
     }
 
+    if (mode === 'shot') {
+      setLineType(line, 'shot', false);
+      line.textContent = value;
+      setCaretOffset(line, line.textContent.length);
+    }
+
     muteSuggestions(450);
     renumberSceneHeadings();
     updateAll();
@@ -3381,6 +3662,7 @@ kbd {
 
     if (oldType === 'scene' && line.classList.contains('slug-boxed')) {
       normalizeSlugBoxes(line);
+      if (convertSceneTransitionMistake(line)) return;
       return;
     }
 
@@ -3658,44 +3940,43 @@ kbd {
   }
 
   function handleElementShortcut(event) {
-    // Ctrl+Alt is unreliable in browsers/Windows keyboard layouts.
-    // Use Ctrl+Shift+1..7 and read event.code so Shift symbols (! @ #) don't break it.
-    if (!(event.ctrlKey || event.metaKey) || !event.shiftKey || event.altKey) return false;
+    // Simple one-hand shortcuts.
+    // Avoid Ctrl+5 / Ctrl+6 / Ctrl+7 because browsers use them for tab switching.
+    // Avoid Alt because it is uncomfortable while typing.
+    var type = null;
 
     var code = event.code || '';
-    var key = event.key || '';
-    var map = {
-      Digit1: 'scene',
-      Digit2: 'action',
-      Digit3: 'character',
-      Digit4: 'parenthetical',
-      Digit5: 'dialogue',
-      Digit6: 'transition',
-      Digit7: 'shot',
-      Numpad1: 'scene',
-      Numpad2: 'action',
-      Numpad3: 'character',
-      Numpad4: 'parenthetical',
-      Numpad5: 'dialogue',
-      Numpad6: 'transition',
-      Numpad7: 'shot'
-    };
+    var key = String(event.key || '').toLowerCase();
 
-    var type = map[code];
+    if ((event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey) {
+      var shortcutMap = {
+        Digit1: 'scene',
+        Digit2: 'action',
+        Digit3: 'character',
+        Digit4: 'parenthetical',
+        Numpad1: 'scene',
+        Numpad2: 'action',
+        Numpad3: 'character',
+        Numpad4: 'parenthetical',
 
-    // Fallback for keyboards/browsers that don't report event.code.
-    if (!type) {
-      var fallback = String(key).replace(/[^0-9]/g, '');
-      var keyMap = {
-        '1': 'scene',
-        '2': 'action',
-        '3': 'character',
-        '4': 'parenthetical',
-        '5': 'dialogue',
-        '6': 'transition',
-        '7': 'shot'
+        // Letter shortcuts
+        KeyM: 'dialogue',
+        KeyQ: 'transition',
+        KeyE: 'shot'
       };
-      type = keyMap[fallback];
+
+      type = shortcutMap[code];
+
+      if (!type) {
+        var fallbackNumber = String(event.key || '').replace(/[^0-9]/g, '');
+        var fallbackMap = {
+          '1': 'scene',
+          '2': 'action',
+          '3': 'character',
+          '4': 'parenthetical'
+        };
+        type = fallbackMap[fallbackNumber] || ({ m: 'dialogue', q: 'transition', e: 'shot' })[key];
+      }
     }
 
     if (!type) return false;
@@ -3718,15 +3999,22 @@ kbd {
 
     hideSuggestions();
     updateAll();
+
+    // Open popup immediately after shortcut changes the element type.
+    setTimeout(function () {
+      if (type === 'shot' || type === 'transition' || type === 'character' || type === 'scene') {
+        updateSuggestions();
+      }
+    }, 0);
+
     saveNow(false);
     if (window.ScreenwriterHistory) window.ScreenwriterHistory.push(serialize());
-
     return true;
   }
 
   function handleTab(event) {
     // Tab shortcuts removed.
-    // Element changes now use Ctrl+Shift+1..7 only.
+    // Element changes now use Ctrl+1..7 only.
     event.preventDefault();
     hideSuggestions();
   }
