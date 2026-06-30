@@ -1133,6 +1133,27 @@ kbd {
   text-align: left !important;
 }
 
+
+/* Show placeholders only on the active empty line */
+.line:empty:not(.active-line)::before {
+  content: "" !important;
+}
+
+.line.scene.slug-boxed:empty:not(.active-line)::before {
+  content: "" !important;
+}
+
+
+
+/* Empty active field should show placeholder again after deleting typed text */
+.line.active-line:empty::before {
+  content: attr(data-placeholder) !important;
+}
+
+.line.active-line[data-placeholder=""]::before {
+  content: "" !important;
+}
+
 </style>
 </head>
 <body>
@@ -2337,6 +2358,18 @@ kbd {
     return line;
   }
 
+  function cleanupEmptyEditableLine(line) {
+    if (!line || (line.dataset.type || 'action') === 'scene') return;
+    var text = (getLinePlainText(line) || '').replace(/\u00a0/g, ' ').trim();
+    if (text) return;
+
+    // Browser may leave <br>, &nbsp; or empty text nodes after Backspace/Delete.
+    // Remove them so .line:empty::before placeholder becomes visible again.
+    if (line.innerHTML && line.innerHTML !== '') {
+      line.innerHTML = '';
+    }
+  }
+
   function stripParentheticalWrapper(text) {
     text = text || '';
     var value = text.trim();
@@ -2634,10 +2667,25 @@ kbd {
     return !!(line && editor.contains(line));
   }
 
+  function removeEmptyNonActiveFields() {
+    if (!editor) return;
+    Array.from(editor.querySelectorAll('.line')).forEach(function (item) {
+      var type = item.dataset.type || 'action';
+      if (item.classList.contains('active-line')) return;
+      if (type !== 'character' && type !== 'parenthetical' && type !== 'dialogue') return;
+      if ((getLinePlainText(item) || '').trim()) return;
+
+      // Keep at least one line in editor.
+      if (editor.querySelectorAll('.line').length <= 1) return;
+      item.remove();
+    });
+  }
+
   function focusLine(line) {
     if (!line) return;
     editor.querySelectorAll('.line').forEach(function (item) { item.classList.remove('active-line'); });
     line.classList.add('active-line');
+    removeEmptyNonActiveFields();
     if (window.ScreenwriterToolbar) window.ScreenwriterToolbar.updateToolbar(line.dataset.type || 'action');
   }
 
@@ -3846,6 +3894,17 @@ kbd {
       return;
     }
 
+    // Empty non-scene fields should not move to the next element.
+    // Example: empty Character + Enter should stay Character.
+    // Dialogue should come only after typing a character name and pressing Enter.
+    if (!text.trim() && (type === 'character' || type === 'parenthetical' || type === 'dialogue')) {
+      hideSuggestions();
+      focusLine(line);
+      updateAll();
+      saveNow(false);
+      return;
+    }
+
     // Do not create a second empty Action line when current Action is blank.
     if (type === 'action' && !text.trim()) {
       hideSuggestions();
@@ -4128,6 +4187,7 @@ kbd {
 
     editor.addEventListener('input', function () {
       var line = getCurrentLine();
+      cleanupEmptyEditableLine(line);
       normalizeCurrentLine(line);
       updateAll();
       scheduleSave();
@@ -4146,6 +4206,13 @@ kbd {
         return;
       }
       if (event.key === 'Enter') return handleEnter(event);
+      if (event.key === 'Backspace' || event.key === 'Delete') {
+        setTimeout(function () {
+          var cleanedLine = getCurrentLine();
+          cleanupEmptyEditableLine(cleanedLine);
+          updateSuggestions();
+        }, 0);
+      }
       if (event.key === 'Backspace') return handleBackspace(event);
       if (event.key === 'Tab') return handleTab(event);
       if (event.key === 'Escape') return hideSuggestions();
