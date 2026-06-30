@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Screenwriter</title>
-  <style>
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="shortcut icon" href="assets/favicon.ico" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+<style>
 :root {
   --bg: #f3f7fc;
   --sidebar: #f7faff;
@@ -66,16 +69,18 @@ button { cursor: pointer; }
   gap: 12px;
 }
 
+.app-logo {
+  object-fit: contain;
+  display: block;
+}
+
 .brand-mark {
   width: 42px;
   height: 42px;
   border-radius: 13px;
-  display: grid;
-  place-items: center;
-  background: var(--accent);
-  color: white;
-  font-weight: 800;
-  letter-spacing: -0.06em;
+  object-fit: cover;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(2, 62, 138, 0.12);
 }
 
 .brand h1 {
@@ -787,12 +792,9 @@ kbd {
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  display: grid;
-  place-items: center;
-  background: #023e8a;
-  color: white;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  object-fit: cover;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(2, 62, 138, 0.12);
 }
 
 .home-brand h1 {
@@ -1012,6 +1014,19 @@ kbd {
 
 [hidden] { display: none !important; }
 
+
+/* Final GitHub asset logo override */
+.app-logo {
+  object-fit: contain;
+  display: block;
+}
+.home-logo,
+.brand-mark {
+  object-fit: contain !important;
+  background: transparent !important;
+  color: transparent;
+}
+
 </style>
 </head>
 <body>
@@ -1019,7 +1034,7 @@ kbd {
   <section id="homeScreen" class="home-screen">
     <header class="home-header">
       <div class="home-brand">
-        <div class="home-logo">SW</div>
+        <img class="app-logo home-logo" src="assets/logo.png" alt="Screenwriter logo" />
         <div>
           <h1>Screenwriter</h1>
           <p>Start clean. Import old files. Continue from recents.</p>
@@ -1059,14 +1074,12 @@ kbd {
   <div class="app-shell" id="appShell" hidden>
     <aside class="sidebar">
       <div class="brand">
-        <div class="brand-mark">SW</div>
+        <img class="app-logo brand-mark" src="assets/logo.png" alt="Screenwriter logo" />
         <div>
           <h1>Screenwriter</h1>
           <p>Clean writing. Fast scene lines.</p>
         </div>
       </div>
-
-      <button class="home-return-btn" id="sidebarHomeBtn" type="button">← Home</button>
 
       <button class="primary-btn" id="newScriptBtn" type="button">+ New Script</button>
 
